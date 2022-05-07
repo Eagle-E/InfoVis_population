@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Javascript Sources -->
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="../Scripts/popPyramid.min.js"></script>
+
+    <!-- CSS pagina's -->
+    <link rel="stylesheet" href="../Stylesheets/nav.css">
+    <link rel="stylesheet" href="../Stylesheets/pyramide.css">
+    <link rel="stylesheet" href="../Stylesheets/slider.css">
+</head>
+
+<body>
+    
+    <div class="topnav">
+        <a href="#p1">Pagina 1</a>
+        <a class="active" href="#p2">Pagina 2</a>
+        <a href="#p3">Pagina 3</a>
+    </div>
+
+    <div id="pyramide" >
+
+    </div>
+
+    <div class="slidecontainer">
+        <input type="range" min="1950" max="2020" value="2000" class="slider" id="myRange" onchange="updateTextInput(this.value);">
+        <p>Value: <span id="demo"></span></p>
+    </div>
+
+    <div>
+        <h1> DEBUFF PLACE ! </h1>
+        <p id="debug">
+
+        </p>
+    </div>
+
+    <!-- Written Scripts-->
+    <!--                -->
+    <!--                -->
+    <script lang="javascript">
+
+        var width = document.getElementById("pyramide").offsetWidth;
+        var height = document.getElementById("pyramide").offsetHeight;
+
+        var margin = {
+            top: 20,
+            bottom: 40,
+            side: 10,
+            mid: 10
+        };
+
+        var data = [10, 15, 20, 25, 30];
+        var data_2 = [10,20, 30];
+        var y_ax = ['A', 'B', 'C', 'D', 'E', 'F']
+
+        var svg = d3.select("#pyramide")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        //SCALE
+        var xscale_right = d3.scaleLinear()
+            .domain( [d3.max(data), 0] )
+            .range([width-margin.side*3, width/2+margin.mid,]);
+
+        var xscale_left = d3.scaleLinear()
+            .domain( [0, d3.max(data)] )
+            .range([width/2-margin.mid, 0]);
+
+        var yscale_right = d3.scaleLinear()
+                .domain([0, d3.max(data)])
+                .range([height-margin.bottom-margin.top, 0]);
+
+        var yscale_left = d3.scaleLinear()
+                .domain([0, d3.max(data)])
+                .range([height-margin.bottom-margin.top, 0]);
+        //AXIS       
+        var x_axis_right = d3.axisBottom()
+                .scale(xscale_right);
+        
+        var x_axis_left = d3.axisBottom()
+            .scale(xscale_left)
+
+        var y_axis_right = d3.axisLeft()
+            .scale(yscale_right)
+
+        var y_axis_left = d3.axisRight()
+            .scale(yscale_left)
+            .ticks("")
+
+        //Transform & Render AXIS
+        var translate_xx_right = margin.mid*2;
+        var translate_xy_right = height - (margin.bottom) ;
+        svg.append("g")
+                .attr("transform", "translate("+translate_xx_right+ ", " + translate_xy_right  +")")
+                .call(x_axis_right)
+
+        var translate_xx_left = margin.side;
+        var translate_xy_left = height - (margin.bottom) ;
+        svg.append("g")
+                .attr("transform", "translate("+translate_xx_left+ ", " + translate_xy_left  +")")
+                .call(x_axis_left)
+
+        var translate_yx_right = margin.side + width/2+ margin.mid*2;
+        var translate_yy_right = margin.top
+        svg.append("g")
+            .attr("transform", "translate(" + translate_yx_right + "," + translate_yy_right +")")
+            .call(y_axis_right);
+
+        var translate_yx_left = width/2;
+        var translate_yy_left = margin.top
+        svg.append("g")
+            .attr("transform", "translate(" + translate_yx_left + "," + translate_yy_left +")")
+            .call(y_axis_left);
+
+
+        // SVG Horizontale BARS
+        var d = [30, 86, 168, 281, 303, 365];
+        svg.selectAll("myBarLeft")
+            .data(d)
+            .enter()
+            .append('rect')
+                .attr('x', 10)
+                .attr('y', 10)
+                .attr('height', 10)
+                .attr('width', 50)
+                .attr('stroke', 'black')
+                .attr('fill', '#69a3b2');
+
+        svg.selectAll("myBarRight")
+            .data(d)
+            .enter()
+            .append('rect')
+                .attr('x', width/2+margin.mid*2+10)
+                .attr('y', height-margin.bottom*2)
+                .attr('height', 10)
+                .attr('width', 50)
+                .attr('stroke', 'black')
+                .attr('fill', '#69a3b2');
+
+    </script>
+
+    <script lang="javascript">
+        var slider = document.getElementById("myRange");
+        var output = document.getElementById("demo");
+        output.innerHTML = slider.value; // Display the default slider value
+
+        // Update the current slider value (each time you drag the slider handle)
+        slider.oninput = function() {
+            output.innerHTML = this.value;
+        }
+    </script>
+
+    <script lang="javascript">
+        d3.csv("../data/popCountries/Belgium-2019.csv", function(data) {
+            //console.log(data);
+            for (var i = 0; i < data.length; i++) {
+
+                var s1 = data[i].Location
+                var s2 = "Belgium"
+                // var t1 = typeof data[i].Location
+                // var t2 = typeof "Belgium"
+
+                // console.log(t1+ " - "+t2)
+                // console.log(s1+" : "+ s2)
+                // console.log(s1.toLowerCase() === s2.toLowerCase())
+                if( s1.toLowerCase().trim() === s2.toLowerCase() ) {
+                    console.log(data[i].Location)
+                    console.log(data[i].Sex)
+                    console.log(data[i].Y1950)
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+<!--
+
+                    .tickValues([])
+
+
+                    
+        <script language="javascript">
+        //Grootte SVG Box
+        var width = 400, height = 300;
+        
+        var margin = {
+            top: 20,
+            right: 10,
+            bottom: 40,
+            left: 10
+        };
+        //Breedte middelstuk
+        margin.middle = 28;
+
+        //testdata
+        var exampleData = [
+        {group: '0-9', male: 10, female: 12},
+        {group: '10-19', male: 14, female: 15},
+        {group: '20-29', male: 15, female: 18},
+        {group: '30-39', male: 18, female: 18},
+        {group: '40-49', male: 21, female: 22},
+        {group: '50-59', male: 19, female: 24},
+        {group: '60-69', male: 15, female: 14},
+        {group: '70-79', male: 8, female: 10},
+        {group: '80-89', male: 4, female: 5},
+        {group: '90-99', male: 2, female: 3},
+        {group: '100-109', male: 1, female: 1},
+        ];
+        // GET THE TOTAL POPULATION SIZE AND CREATE A FUNCTION FOR RETURNING THE PERCENTAGE
+        var totalPopulation = d3.sum(exampleData, function(d) { return d.male + d.female; }), percentage = function(d) { return d / totalPopulation; };
+
+        var svg = d3.select('#pyramide')
+            .append('svg')
+                .attr('width', margin.left + width + margin.right)
+                .attr('height', margin.top + height + margin.bottom)
+            .append('g')
+                .attr('class', 'inner-region')
+                .attr('transform', translation(margin.left, margin.top));
+        
+        //Posities 0 waarde voor mannen als vrouwen. A = Man, B = Vrouw
+        var regionWidth = (width/2) - margin.middle;
+        var pointA = regionWidth, pointB = width - regionWidth;
+
+
+        // find the maximum data value on either side
+        //  since this will be shared by both of the x-axes
+        var maxValue = Math.max(
+            d3.max(exampleData, function(d) { return percentage(d.male); }),
+            d3.max(exampleData, function(d) { return percentage(d.female); })
+        );
+
+        // SET UP SCALES
+
+        // the xScale goes from 0 to the width of a region
+        //  it will be reversed for the left x-axis
+        var xScale = d3.scale.linear()
+            .domain([0, maxValue])
+            .range([0, regionWidth])
+            .nice();
+
+        var xScaleLeft = d3.scale.linear()
+            .domain([0, maxValue])
+            .range([regionWidth, 0]);
+
+        var xScaleRight = d3.scale.linear()
+            .domain([0, maxValue])
+            .range([0, regionWidth]);
+
+        var yScale = d3.scale.ordinal()
+            .domain(exampleData.map(function(d) { return d.group; }))
+            .rangeRoundBands([h,0], 0.1);
+
+        // SET UP AXES
+        var yAxisLeft = d3.svg.axis()
+            .scale(yScale)
+            .orient('right')
+            .tickSize(4,0)
+            .tickPadding(margin.middle-4);
+
+        var yAxisRight = d3.svg.axis()
+            .scale(yScale)
+            .orient('left')
+            .tickSize(4,0)
+            .tickFormat('');
+
+        var xAxisRight = d3.svg.axis()
+            .scale(xScale)
+            .orient('bottom')
+            .tickFormat(d3.format('%'));
+
+        var xAxisLeft = d3.svg.axis()
+            // REVERSE THE X-AXIS SCALE ON THE LEFT SIDE BY REVERSING THE RANGE
+            .scale(xScale.copy().range([pointA, 0]))
+            .orient('bottom')
+            .tickFormat(d3.format('%'));
+
+        // MAKE GROUPS FOR EACH SIDE OF CHART
+        // scale(-1,1) is used to reverse the left side so the bars grow left instead of right
+        var leftBarGroup = svg.append('g')
+            .attr('transform', translation(pointA, 0) + 'scale(-1,1)');
+        var rightBarGroup = svg.append('g')
+            .attr('transform', translation(pointB, 0));
+
+
+        // DRAW AXES
+        svg.append('g')
+            .attr('class', 'axis y left')
+            .attr('transform', translation(pointA, 0))
+            .call(yAxisLeft)
+            .selectAll('text')
+            .style('text-anchor', 'middle');
+
+        svg.append('g')
+            .attr('class', 'axis y right')
+            .attr('transform', translation(pointB, 0))
+            .call(yAxisRight);
+
+        svg.append('g')
+            .attr('class', 'axis x left')
+            .attr('transform', translation(0, h))
+            .call(xAxisLeft);
+
+        svg.append('g')
+            .attr('class', 'axis x right')
+            .attr('transform', translation(pointB, h))
+            .call(xAxisRight);
+
+        // DRAW BARS
+        leftBarGroup.selectAll('.bar.left')
+            .data(exampleData)
+            .enter().append('rect')
+                .attr('class', 'bar left')
+                .attr('x', 0)
+                .attr('y', function(d) { return yScale(d.group); })
+                .attr('width', function(d) { return xScale(percentage(d.male)); })
+                .attr('height', yScale.rangeBand());
+
+        rightBarGroup.selectAll('.bar.right')
+            .data(exampleData)
+            .enter().append('rect')
+                .attr('class', 'bar right')
+                .attr('x', 0)
+                .attr('y', function(d) { return yScale(d.group); })
+                .attr('width', function(d) { return xScale(percentage(d.female)); })
+                .attr('height', yScale.rangeBand());
+
+        //IPV Stringconcatenatie
+        function translation(x,y) {
+            return 'translate(' + x + ',' + y + ')';
+        }
+    </script>
+
+
+
+            for (var i = 0; i < data.length; i++) {
+
+                var s1 = data[i].Location
+                var s2 = "Belgium"
+                // var t1 = typeof data[i].Location
+                // var t2 = typeof "Belgium"
+
+                // console.log(t1+ " - "+t2)
+                // console.log(s1+" : "+ s2)
+                // console.log(s1.toLowerCase() === s2.toLowerCase())
+                if( s1.toLowerCase().trim() === s2.toLowerCase() ) {
+                    console.log(data[i].Location)
+                    console.log(data[i].Sex)
+                    console.log(data[i].Y1950)
+                }
+            }
