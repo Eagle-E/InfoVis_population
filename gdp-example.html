@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+	<title>Scatterplot with Voronoi</title>
+
+	<!-- D3.js -->	
+    <script src="https://d3js.org/d3.v3.js"></script>
+	
+	<!-- jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	
+	<!-- Open Sans & CSS -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:700,400,300" rel='stylesheet' type='text/css'>
+	  <style>
+		body {
+		  font-family: 'Open Sans', sans-serif;
+		  font-size: 12px;
+		  font-weight: 400;
+		  color: #525252;
+		  text-align: center;
+		}	
+		
+		.axis path,
+		.axis line {
+			fill: none;
+			stroke: #B3B3B3;
+			shape-rendering: crispEdges;
+		}
+		.axis text {
+			font-size: 10px;
+			fill: #6B6B6B;
+		}
+
+		.countries {
+			pointer-events: none;
+		}
+
+		.circle-wrapper {
+			fill: none;
+			pointer-events: all;
+		}
+
+		.guide {
+			pointer-events: none;
+			font-size: 14px;
+			font-weight: 600;
+		}
+		
+		.popover {
+			pointer-events: none;
+		}
+		
+		.legendCircle {
+			stroke-width:1;
+			stroke:#999;
+			stroke-dasharray:2 2;
+			fill:none;
+		}
+
+		.legendLine {
+			stroke-width: 1;
+			stroke: #D1D1D1;
+			shape-rendering: crispEdges;
+		}
+
+		.legendTitle {
+			fill: #1A1A1A;
+			color: #1A1A1A;
+			text-anchor: middle;
+			font-size: 10px;
+		}
+
+		.legendText {
+			fill: #949494;
+			text-anchor: start;
+			font-size: 9px;
+		}
+		
+		@media (min-width: 500px) {
+		  .col-sm-3, .col-sm-9 {
+			float: left;
+		  }
+		  .col-sm-9 {
+			width: 75%;
+		  }
+		  .col-sm-3 {
+			width: 25%;
+		  }
+		}
+	  </style>
+  </head>
+  <body>
+
+	<div id="cont" class="container-fluid text-center">
+		<div class="row scatter">
+			<h5 style="color: #3B3B3B;">Wealth and Health of nations</h5>
+			<div class="col-sm-9">
+				<div id="chart"></div>
+			</div>
+			<div id = "legend" class="col-sm-3" style="padding-right: 0px; padding-left: 0px;">
+				<div class="legendTitle" style="font-size: 12px;">REGION</div>
+				<div id="legend"></div>
+			</div>
+		</div>
+	</div>
+
+	<script src="gdp-worldbank.js"></script>
+    <script src="gdp.js"></script>
+	
+  </body>
+</html>
