@@ -42,7 +42,7 @@
         var loc = "../data/popCountries/"+c+"_"+y+".csv";
 
         var select = document.getElementById("debug");
-        select.innerHTML = "This chart is from the following data: \n"+c + " :: " + y;
+        select.innerHTML = "This chart is from the following data: \n"+c + "_" + y+".csv";
 
         d3.csv(loc, function(data) {
           draw_pyramide(data);
