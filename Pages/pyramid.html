@@ -1,8 +1,8 @@
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="../Scripts/jquery.csv.js"></script>
-
     <link rel="stylesheet" href="../Stylesheets/nav.css">
 
     <style>
@@ -16,12 +16,11 @@
             stroke: #555;
         }
         .axis text {
-            font-size: 11px;
+            font-size: 13px;
         }
         .bar {
-            fill-opacity: 0.5;
+            fill-opacity: 0.9;
         }
-
     </style>
 
     <script language="javascript">
@@ -43,17 +42,16 @@
           draw_pyramide(data);
         });
       }
-      
       function draw_pyramide(exampleData){
         // SET UP DIMENSIONS
-        var w = 500,
-            h = 300;
+        var w = window.innerWidth*0.66,
+            h = w*0.66;
       
         // margin.middle is distance from center line to each y-axis
         var margin = {
           top: 20,
           right: 20,
-          bottom: 24,
+          bottom: 30,
           left: 20,
           middle: 28
         };
@@ -208,8 +206,8 @@
                   .style("fill", "rgb(0, 0, 255)");
             });
       }
-
       function changeData(){
+        
         var e = document.getElementById("sLand");
         var v = e.value;
         
@@ -231,6 +229,10 @@
 </head>
 
 <body onload="init()"> 
+  <script lang="javascript">
+    window.addEventListener('resize', changeData);
+  </script>
+
   <div class="topnav">
     <a href="#p1">S-Page</a>
     <a class="active" href="#p2">Population Pyramide</a>
@@ -265,7 +267,6 @@
         select.appendChild(el);
       }
     </script>
-
     <script lang="javascript">
       var select = document.getElementById("sLand");
       var options = 
