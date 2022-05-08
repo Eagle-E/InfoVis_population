@@ -49,9 +49,6 @@
         });
       }
       
-      function pyramide_init(){
-
-      }
       function draw_pyramide(exampleData){
         // SET UP DIMENSIONS
         var w = 500,
@@ -83,9 +80,8 @@
         percentageF = function(d) { return d / totalF; };
     
         // CREATE SVG
-        var svg = d3.select("svg");
-        svg.selectAll("*").remove();
-
+        d3.select("svg").remove();
+        
         var svg = d3.select('#pyramide').append('svg')
           .attr('width', margin.left + w + margin.right)
           .attr('height', margin.top + h + margin.bottom)
@@ -227,7 +223,6 @@
   </div>
 
   <div id="selectorz">
-
     <form id="myForm">
       <select id="sLand" onchange="countryChange(this.value);">
         <option>Choose Country</option>
@@ -323,13 +318,9 @@
         select.appendChild(el);
       }
     </script>
-
-
-  <div id="pyramide">
-    <script>
-    </script>
   </div>
-  </div>
+
+  <div id="pyramide"></div>
 
 </body>
 </html>

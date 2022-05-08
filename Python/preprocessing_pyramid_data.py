@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-def main():
+def build_cvs():
     df_male = pd.read_csv('./data/Nation_Age_Men.csv', delimiter=';')
     df_female = pd.read_csv('./data/Nation_Age_Men.csv', delimiter=';')
 
@@ -35,19 +35,5 @@ def main():
             d = pd.DataFrame(data, columns=['Age', 'M', 'F'])
             d.to_csv(f_name, index=False, sep=',')
 
-def build_cvs(age_array, df_country_male, df_country_female):
-    data = []
-
-    for i in range(len(age_array)):
-        sub_data = []
-        sub_data.append(age_array[i])
-        sub_data.append(df_country_male[age_array[i]])
-        sub_data.append(df_country_female[age_array[i]])
-        
-        data.append(sub_data)
-
-    df = pd.DataFrame(data, columns = ['Age', 'M', 'F'])
-    print(df.head)
-
 if __name__ == "__main__":
-    main()
+    build_cvs()
