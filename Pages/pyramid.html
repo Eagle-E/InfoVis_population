@@ -176,15 +176,15 @@
             .attr('height', yScale.rangeBand())
             .style("fill", "rgb(246, 51, 213)")
             .on('mouseover', function(){
-                d3.select(this).attr('style', 'fill: orange;');
+                d3.select(this)
+                  .attr('style', 'fill: orange;');
+                
                 var select = document.getElementById("debug");
-                select.innerHTML = "CLICKED LEFT";
+                select.innerHTML = d3.select(this).attr("y")*1000;
             })
             .on('mouseout', function(){
                 d3.select(this)
                   .style("fill", "rgb(246, 51, 213)");
-                var select = document.getElementById("debug");
-                select.innerHTML = "CLICKED LEFT";
             });
 
         rightBarGroup.selectAll('.bar.right')
@@ -197,15 +197,15 @@
             .attr('height', yScale.rangeBand())
             .style("fill", "rgb(0, 0, 255)")
             .on('mouseover', function(){
-                d3.select(this).attr('style', 'fill: orange;');
+                d3.select(this)
+                  .attr('style', 'fill: orange;');
+
                 var select = document.getElementById("debug");
-                select.innerHTML = "CLICKED RIGHT";
+                select.innerHTML = d3.select(this).attr("y")*1000;
             })
             .on('mouseout', function(){
                 d3.select(this)
                   .style("fill", "rgb(0, 0, 255)");
-                var select = document.getElementById("debug");
-                select.innerHTML = "CLICKED RIGHT";
             });
       }
 
