@@ -10,6 +10,8 @@ def main():
     ages = df_male.columns[2:].to_numpy()
 
     #C = 'France' #Temp fixed later itereren
+    # print(years)
+    # print(countries)
 
     for C in countries:
         df_country_male = df_male.loc[df_male['Region'] == C]
@@ -23,8 +25,8 @@ def main():
             for A in ages:
                 sdata = []
                 sdata.append(A)
-                sdata.append(str(df_y_male.iloc[0][A]).strip())
-                sdata.append(str(df_y_female.iloc[0][A]).strip())
+                sdata.append(str(df_y_male.iloc[0][A]).replace(" ", ""))
+                sdata.append(str(df_y_female.iloc[0][A]).replace(" ", ""))
                 data.append(sdata)
 
             
