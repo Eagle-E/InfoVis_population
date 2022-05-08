@@ -21,12 +21,7 @@
         .bar {
             fill-opacity: 0.5;
         }
-        .bar.left {
-            fill: rgb(246, 51, 213);
-        }
-        .bar.right {
-            fill: rgb(0, 0, 255);
-        }
+
     </style>
 
     <script language="javascript">
@@ -178,7 +173,20 @@
             .attr('x', 0)
             .attr('y', function(d) { return yScale(d.Age); })
             .attr('width', function(d) { return xScale(percentageM(d.M)); })
-            .attr('height', yScale.rangeBand());
+            .attr('height', yScale.rangeBand())
+            .style("fill", "rgb(246, 51, 213)")
+            .on('mouseover', function(){
+                d3.select(this).attr('style', 'fill: orange;');
+                var select = document.getElementById("debug");
+                select.innerHTML = "CLICKED LEFT";
+            })
+            .on('mouseout', function(){
+                d3.select(this)
+                  .style("fill", "rgb(246, 51, 213)");
+                var select = document.getElementById("debug");
+                select.innerHTML = "CLICKED LEFT";
+            });
+
         rightBarGroup.selectAll('.bar.right')
           .data(exampleData)
           .enter().append('rect')
@@ -186,7 +194,19 @@
             .attr('x', 0)
             .attr('y', function(d) { return yScale(d.Age); })
             .attr('width', function(d) { return xScale(percentageF(d.F)); })
-            .attr('height', yScale.rangeBand());
+            .attr('height', yScale.rangeBand())
+            .style("fill", "rgb(0, 0, 255)")
+            .on('mouseover', function(){
+                d3.select(this).attr('style', 'fill: orange;');
+                var select = document.getElementById("debug");
+                select.innerHTML = "CLICKED RIGHT";
+            })
+            .on('mouseout', function(){
+                d3.select(this)
+                  .style("fill", "rgb(0, 0, 255)");
+                var select = document.getElementById("debug");
+                select.innerHTML = "CLICKED RIGHT";
+            });
       }
 
       function changeData(){
