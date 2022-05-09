@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- <script src="package/dist/d3.min.js"></script> -->
+    <script src="https://d3js.org/d3.v4.js"></script>
+</head>
+
+<body>
+    <h1>Hello internet..</h1>
+    <div>
+        <H2>
+            Hier komt visualisatie? IDK
+        </H2>
+
+        <p>
+            TEST TEST
+        </p>
+    </div>
+
+    <svg id="my_dataviz" width="800" height="600"></svg>
+    <svg id="my_dataviz2" width="800" height="600"></svg>
+
+    <footer id="foot01"></footer>
+
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+
+     
+    <script>
+
+        // The svg
+        var svg = d3.select("svg"),
+          width = +svg.attr("width"),
+          height = +svg.attr("height");
+        
+        // Map and projection
+        var path = d3.geoPath();
+        var projection = d3.geoMercator()
+          .scale(150)
+          .center([50,50])
+          .translate([width / 2, height / 2]);
+        
+        // Data and color scale
+        var data = d3.map();
+        var colorScale = d3.scaleThreshold()
+          .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
+          .range(d3.schemeBlues[7]);
+        
+        // Load external data and boot
+        d3.queue()
+          .defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
+          .defer(d3.csv, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv", function(d) { data.set(d.code, +d.pop); })
+          .await(ready);
+        
+        function ready(error, topo) {
+        
+          let mouseOver = function(d) {
+            d3.selectAll(".Country")
+              .transition()
+              .duration(200)
+              .style("opacity", .5)
+            d3.select(this)
+              .transition()
+              .duration(200)
+              .style("opacity", 1)
+              .style("stroke", "black")
+          }
+        
+          let mouseLeave = function(d) {
+            d3.selectAll(".Country")
+              .transition()
+              .duration(200)
+              .style("opacity", .8)
+            d3.select(this)
+              .transition()
+              .duration(200)
+              .style("stroke", "transparent")
+          }
+        
+          // Draw the map
+          svg.append("g")
+            .selectAll("path")
+            .data(topo.features)
+            .enter()
+            .append("path")
+              // draw each country
+              .attr("d", d3.geoPath()
+                .projection(projection)
+              )
+              // set the color of each country
+              .attr("fill", function (d) {
+                d.total = data.get(d.id) || 0;
+                return colorScale(d.total);
+              })
+              .style("stroke", "transparent")
+              .attr("class", function(d){ return "Country" } )
+              .style("opacity", .8)
+              .on("mouseover", mouseOver )
+              .on("mouseleave", mouseLeave )
+            }
+        
+    </script>
+    <script src="script.js"></script>
+    <script src="package/src/index.js"></script>
+    <div id="my_dataviz"></div>   
+    <script>
+
+        // set the dimensions and margins of the graph
+        var margin = {top: 10, right: 30, bottom: 30, left: 40},
+            width = 460 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
+        
+        // append the svg object to the body of the page
+        var svg = d3.select("#my_dataviz2")
+          .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+            .attr("transform",
+                  "translate(" + margin.left + "," + margin.top + ")");
+        
+        // get the data
+        d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/1_OneNum.csv", function(data) {
+        
+          // X axis: scale and draw:
+          var x = d3.scaleLinear()
+              .domain([0, 1000])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
+              .range([0, width]);
+          svg.append("g")
+              .attr("transform", "translate(0," + height + ")")
+              .call(d3.axisBottom(x));
+        
+          // set the parameters for the histogram
+          var histogram = d3.histogram()
+              .value(function(d) { return d.price; })   // I need to give the vector of value
+              .domain(x.domain())  // then the domain of the graphic
+              .thresholds(x.ticks(70)); // then the numbers of bins
+        
+          // And apply this function to data to get the bins
+          var bins = histogram(data);
+        
+          // Y axis: scale and draw:
+          var y = d3.scaleLinear()
+              .range([height, 0]);
+              y.domain([0, d3.max(bins, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
+          svg.append("g")
+              .call(d3.axisLeft(y));
+        
+          // append the bar rectangles to the svg element
+          svg.selectAll("rect")
+              .data(bins)
+              .enter()
+              .append("rect")
+                .attr("x", 1)
+                .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+                .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
+                .attr("height", function(d) { return height - y(d.length); })
+                .style("fill", "#69b3a2")
+        
+        });
+    </script>
+</body>
+
+
+</html>
