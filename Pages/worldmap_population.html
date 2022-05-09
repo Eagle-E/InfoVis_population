@@ -30,26 +30,50 @@
      
     <script>
 
-        // The svg
+        // Get worldmap svg size
         var svg = d3.select("svg#worldmap");
         var svgBounds = svg.node().getBoundingClientRect()
         var width = svgBounds.width;
         var height = svgBounds.height;
-        console.log(`svg: (w, h) = (${svgBounds.width}, ${svgBounds.height})`)
+        console.log(`worldmap svg: (w, h) = (${svgBounds.width}, ${svgBounds.height})`)
 
-        // Map and projection
+        // The projection object for rescaling data to the size of the ui
         var path = d3.geoPath();
         var projection = d3.geoMercator()
           .scale(150)
-          .center([50,50])
+          .center([50,-20])
           .translate([width / 2, height / 2]);
         
-        // Data and color scale
+        // Color scheme of the countries based on population
+        //   - Shades of green: hundreds of thousands and millions
+        //   - Shades of blue: tens of millions
+        //   - Shades of red: hundreds of millions and more
+        // Until 100 million use shades of blue, use shades
+        // of red for countries having > 100 million inhabitants
+        // categories:
+        //       GREEN                  |     BLUE                  |      RED
+        //  500k  1mil  2.5mil  5mil  10mil  25mil  50mil  75mil  100mil 325mil 550mil 775mil 1000mil
         var data = d3.map();
+        colorRanges = [
+            500000, 1000000, 2500000, 5000000, 10000000,    // GREEN 
+            25000000, 50000000, 75000000, 100000000,        // BLUE
+            325000000, 550000000, 775000000, 1000000000     // RED
+        ];
+
+        // The final colors are a slightly modified version of the generated colors in the next line 
+        // colors = d3.schemeGreens[5].concat(d3.schemeBlues[4]).concat(d3.schemeReds[5]);
+        colorsG = ['#a0d69b', '#74c476', '#41ab5d', '#238b45', '#005a32'];
+        colorsB = ['#bdd7e7', '#6baed6', '#3182bd', '#08519c'];
+        colorsR = ['#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#99000d']
+        colors = [...colorsG, ...colorsB, ...colorsR];
         var colorScale = d3.scaleThreshold()
-          .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
-          .range(d3.schemeBlues[7]);
+          .domain(colorRanges)
+          .range(colors);
         
+        // var colorScale = d3.scaleThreshold()
+        //   .domain(colorRanges)
+        //   .range(d3.schemeBlues[colorRanges.lenght + 1]);
+
         // Load external data and boot
         d3.queue()
           .defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
