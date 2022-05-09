@@ -30,18 +30,7 @@
       function translation(x,y) {
         return 'translate(' + x + ',' + y + ')';
       }
-      function init(){
-        var c = "WORLD";
-        var y = "2020";
-        var loc = "../data/popCountries/"+c+"_"+y+".csv";
 
-        var select = document.getElementById("debug");
-        select.innerHTML = "This chart is from the following data: \n"+c + "_" + y+".csv";
-
-        d3.csv(loc, function(data) {
-          draw_pyramide(data);
-        });
-      }
       function draw_pyramide(exampleData){
         // SET UP DIMENSIONS
         var w = window.innerWidth*0.66,
@@ -207,20 +196,22 @@
             });
       }
       function changeData(){
-        
         var e = document.getElementById("sLand");
         var v = e.value;
         
         var e2 = document.getElementById("sYear");
         var v2 = e2.value;
 
-        //console.log(v1 + " :: " + v2);
+        if(v == "Choose Country" && v2 == "Choose Year"){
+          v = "WORLD";
+          v2 = "2020";
+        }
         var select = document.getElementById("debug");
         select.innerHTML = v + " :: " + v2;
 
         var c = v;
         var y = v2;
-        var loc = "../data/popCountries/"+c+"_"+y+".csv";
+        var loc = "../data/popCountries/"+v+"_"+v2+".csv";
         d3.csv(loc, function(data) {
           draw_pyramide(data);
         });
@@ -228,7 +219,7 @@
     </script>
 </head>
 
-<body onload="init()"> 
+<body onload="changeData()"> 
   <script lang="javascript">
     window.addEventListener('resize', changeData);
   </script>
