@@ -4,8 +4,8 @@
     height: 100%;
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: max-content 1fr;
-
+    grid-template-rows: max-content 1fr max-content;
+    justify-items: center;
 }
 
 #page_title
@@ -37,4 +37,8 @@
 path {
     stroke: rgb(151, 151, 151);
     stroke-width: 1px;
+}
+
+#legend{
+    margin: 0 auto;
 }
