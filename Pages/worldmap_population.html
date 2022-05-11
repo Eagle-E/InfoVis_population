@@ -11,6 +11,7 @@
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
 </head>
 
 <body>
@@ -29,6 +30,9 @@
 
      
     <script>
+        // globals
+        previousHoverCountry = null;
+
 
         // Get worldmap svg size
         var svg = d3.select("svg#worldmap");
@@ -80,55 +84,66 @@
           .defer(d3.csv, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv", 
                 function(d) { data.set(d.code, +d.pop); })
           .await(ready);
-        
+
         function ready(error, topo) 
         {
-            let mouseOver = function(d) {
+            let mouseOver = function(countryPath) {
                 d3.selectAll(".Country")
                   .transition()
                   .duration(200)
-                  .style("opacity", .5);
+                  .style("opacity", .5)
+                  .style("stroke", "#979797");
+
+                  d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .style("opacity", 1)  
+                    .style("stroke", "black");
+            }
+        
+            let mouseLeave = function(countryPath) {
+                d3.selectAll(".Country")
+                .transition()
+                .duration(200)
+                .style("opacity", .8)
+                .style("stroke", "#979797")
 
                 d3.select(this)
-                  .transition()
-                  .duration(200)
-                  .style("opacity", 1)
-                  .style("stroke", "black");
+                    .transition()
+                    .duration(200)
+                    .style("stroke", "#979797")
             }
         
-          let mouseLeave = function(d) {
-            d3.selectAll(".Country")
-              .transition()
-              .duration(200)
-              .style("opacity", .8)
-            d3.select(this)
-              .transition()
-              .duration(200)
-              .style("stroke", "transparent")
-          }
-        
-          // Draw the map
-          svg.append("g")
-            .selectAll("path")
-            .data(topo.features)
-            .enter()
-            .append("path") 
-              // draw each country
-              .attr("d", d3.geoPath()
+            // Draw the map
+            svg.append("g")
+                .selectAll("path")
+                .data(topo.features)
+                .enter()
+                .append("path") 
+                // draw each country
+                .attr("d", d3.geoPath()
                 .projection(projection)
-              )
-              // set the color of each country
-              .attr("fill", function (d) {
-                d.total = data.get(d.id) || 0;
-                return colorScale(d.total);
-              })
-              .style("stroke", "transparent")
-              .attr("class", function(d){ return "Country" } )
-              .style("opacity", .8)
-              .on("mouseover", mouseOver )
-              .on("mouseleave", mouseLeave )
-            }
-        
+                )
+                // set the color of each country
+                .attr("fill", function (d) {
+                    d.total = data.get(d.id) || 0;
+                    return colorScale(d.total);
+                })
+                .style("stroke", "#979797")
+                .style("stroke-width", "0.5px")
+                .attr("class", function(d){ return "Country" } )
+                .style("opacity", .8)
+                .on("mouseover", mouseOver )
+                .on("mouseleave", mouseLeave )
+        }
+
+        // zoom and pan
+        svg.call(d3.zoom()
+                   .on("zoom", function () {
+                       svg.attr("transform", d3.event.transform)
+                    }
+                ))
+            .append("g");
     </script>
     
 </body>
