@@ -1,0 +1,8 @@
+* Interaction with the ui should be consistent accross the pages. When a country is selected in one of the UI's, it should be also selected in the other UI's/pages.
+    - like when belgium is selected in the worldmap, it should also be preselected in the other two pages.
+* use consisten colors, same color scheme in all ui's
+* units should be consistent and mentioned everywhere where necessary
+* Being able to compare country statistics is useful
+  * world map: selection of multiple countries to bring them into focus and the others out of focus to be able to see the difference easier
+* worldmap: Slider for selecting current visualized time
+* 
