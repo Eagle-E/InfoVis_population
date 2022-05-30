@@ -22,9 +22,9 @@ var opacityCircles = 0.7,
 
 //Set the color for each region
 var color = d3.scale.ordinal()
-					.range(["#EFB605", "#E58903", "#E01A25", "#C20049", "#991C71", "#66489F", "#2074A0", "#10A66E", "#7EB852"])
-					.domain(["Africa | North & East", "Africa | South & West", "America | North & Central", "America | South", 
-							 "Asia | East & Central", "Asia | South & West", "Europe | North & West", "Europe | South & East", "Oceania"]);
+					.range(["#EFB605", "#E58903", "#E01A25", "#C20049", "#991C71", "#66489F"])
+					.domain(["Africa", "America", "America", 
+							 "Asia",  "Europe", "Oceania"]);
 							 
 //Set the new x axis range
 var xScale = d3.scale.log()
@@ -157,7 +157,7 @@ circleGroup.selectAll("countries")
 		.attr("cy", function(d) {return yScale(d.lifeExpectancy);})
 		.attr("r", function(d) {return rScale(d.GDP);})
 		.style("opacity", opacityCircles)
-		.style("fill", function(d) {return color(d.Region);});
+		.style("fill", function(d) {return color(d.Continent);});
 			
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////// Create the Legend////////////////////////////////
@@ -227,7 +227,7 @@ function selectLegend(opacity) {
 		var chosen = color.domain()[i];
 			
 		wrapper.selectAll(".countries")
-			.filter(function(d) { return d.Region != chosen; })
+			.filter(function(d) { return d.Continent != chosen; })
 			.transition()
 			.style("opacity", opacity);
 	  };
