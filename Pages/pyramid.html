@@ -30,6 +30,8 @@
           border: 1px solid #6F257F;
           padding: 14px;
           text-align: center;
+          border-radius: 10px;
+          box-shadow: 2px 5px #888888;
         }
 
         .sliderYear{
@@ -250,12 +252,11 @@
         var e = document.getElementById("sLand");
         var v = e.value;
         
-        var e2 = document.getElementById("sYear");
+        var e2 = document.getElementById('slide');
         var v2 = e2.value;
 
-        if(v == "Choose Country" && v2 == "Choose Year"){
+        if(v == "Choose Country"){
           v = "WORLD";
-          v2 = "2020";
         }
         var select = document.getElementById("debug");
         select.innerHTML = v + " :: " + v2;
@@ -293,14 +294,7 @@
         <option>Choose Country</option>
       </select>
 
-      <select id="sYear" onchange="countryChange(this.value);">
-        <option>Choose Year</option>
-      </select>
-
-      <input class="sliderYear" type="range" min="1950" max="2020" step="5" list="steplist">
-      <datalist id="steplist">
-          <option>0</option>
-      </datalist>
+      <input id="slide" class="sliderYear" type="range" min="1950" max="2020" value="2000" step="5" list="steplist">
 
     </form>
 
@@ -317,18 +311,6 @@
       }
     </script>
 
-    <script lang="javascript">
-      var select = document.getElementById("sYear");
-      var options = ["1950", "1955", "1960", "1965", "1970", "1975", "1980", "1985", "1990", "1995", "2000", "2005", "2010", "2015", "2020"];
-      
-      for(var i = 0; i < options.length; i++) {
-        var opt = options[i];
-        var el = document.createElement("option");
-        el.textContent = opt;
-        el.value = opt;
-        select.appendChild(el);
-      }
-    </script>
     <script lang="javascript">
       var select = document.getElementById("sLand");
       var options = 
@@ -399,6 +381,18 @@
         el.textContent = opt;
         el.value = opt;
         select.appendChild(el);
+      }
+    </script>
+
+    <script lang="javascript">
+      var slide = document.getElementById('slide');
+
+      var select = document.getElementById("debug");
+      select.innerHTML = "CLICKED LEFT";
+
+      slide.onchange = function() {
+          select.innerHTML = this.value;
+          changeData();
       }
     </script>
   </div>
