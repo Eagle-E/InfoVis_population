@@ -2,7 +2,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://d3js.org/d3.v3.min.js"></script>
-    <!--  <script src="../Scripts/d3js/d3.v4.js"></script> --> 
     <script src="../Scripts/jquery.csv.js"></script>
     <link rel="stylesheet" href="../Stylesheets/nav.css">
 
@@ -31,6 +30,10 @@
           border: 1px solid #6F257F;
           padding: 14px;
           text-align: center;
+        }
+
+        .sliderYear{
+          width: 750px !important;
         }
     </style>
 
@@ -274,8 +277,9 @@
 
   <div class="topnav">
     <a href="#p1">S-Page</a>
-    <a class="active" href="#p2">Population Pyramide</a>
+    <a class="active" href="../Pages/pyramid.html">Population Pyramide</a>
     <a href="#p3">R-page</a>
+    <a href="../Pages/about.html">About</a>
   </div>
 
   <div>
@@ -293,7 +297,7 @@
         <option>Choose Year</option>
       </select>
 
-      <input type="range" min="1950" max="2020" step="5" list="steplist">
+      <input class="sliderYear" type="range" min="1950" max="2020" step="5" list="steplist">
       <datalist id="steplist">
           <option>0</option>
       </datalist>

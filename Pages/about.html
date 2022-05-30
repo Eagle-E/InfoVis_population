@@ -1,0 +1,59 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="../Scripts/jquery.csv.js"></script>
+    <link rel="stylesheet" href="../Stylesheets/nav.css">
+
+    <style>
+        svg {
+            border: 1px solid #ccc;
+        }
+        .axis line,
+        .axis path {
+            shape-rendering: crispEdges;
+            fill: transparent;
+            stroke: #555;
+        }
+        .axis text {
+            font-size: 13px;
+        }
+        .bar {
+            fill-opacity: 0.9;
+        }
+        .toolTip {
+          position: absolute;
+          display: none;
+          min-width: 80px;
+          height: auto;
+          background: none repeat scroll 0 0 #ffffff;
+          border: 1px solid #6F257F;
+          padding: 14px;
+          text-align: center;
+        }
+
+        .sliderYear{
+          width: 750px !important;
+        }
+    </style>
+
+</head>
+
+<body onload="changeData()"> 
+
+  <div class="topnav">
+    <a href="#p1">S-Page</a>
+    <a href="../Pages/pyramid.html">Population Pyramide</a>
+    <a href="#p3">R-page</a>
+    <a class="active" href="../Pages/about.html">About</a>
+  </div>
+
+  <div>
+    <H1>Population </H1>
+    <p> Visualizatie per land</p>
+    <p> vergelijking per land als groep er zin in heeft. </p>
+  </div>
+
+
+</body>
+</html>
