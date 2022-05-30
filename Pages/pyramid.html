@@ -2,6 +2,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://d3js.org/d3.v3.min.js"></script>
+    <!--  <script src="../Scripts/d3js/d3.v4.js"></script> --> 
     <script src="../Scripts/jquery.csv.js"></script>
     <link rel="stylesheet" href="../Stylesheets/nav.css">
 
@@ -20,6 +21,16 @@
         }
         .bar {
             fill-opacity: 0.9;
+        }
+        .toolTip {
+          position: absolute;
+          display: none;
+          min-width: 80px;
+          height: auto;
+          background: none repeat scroll 0 0 #ffffff;
+          border: 1px solid #6F257F;
+          padding: 14px;
+          text-align: center;
         }
     </style>
 
@@ -64,9 +75,11 @@
         // CREATE SVG
         d3.select("svg").remove();
         
+        var s = 1.5 
+
         var svg = d3.select('#pyramide').append('svg')
-          .attr('width', margin.left + w + margin.right)
-          .attr('height', margin.top + h + margin.bottom)
+          .attr('width', margin.left*s + w + margin.right*s)
+          .attr('height', margin.top*s + h + margin.bottom*s)
           // ADD A GROUP FOR THE SPACE WITHIN THE MARGINS
           .append('g')
             .attr('transform', translation(margin.left, margin.top));
@@ -151,27 +164,57 @@
           .attr('class', 'axis x right')
           .attr('transform', translation(pointB, h))
           .call(xAxisRight);
+
+          //LABELS
+          svg.append("text")             
+            .attr("x", w*0.75 )
+            .attr("y",  h+margin.bottom*1.3)
+            .style("text-anchor", "middle")
+            .style("font-size", "18px")
+            .text("Percentage of men");
+
+          svg.append("text")             
+            .attr("x", w*0.25 )
+            .attr("y",  h+margin.bottom*1.3)
+            .style("text-anchor", "middle")
+            .style("font-size", "18px")
+            .text("Percentage of women");
+
+          svg.append("text")             
+            .attr("x", w*0.5 )
+            .attr("y",  -margin.top*0.25)
+            .style("text-anchor", "middle")
+            .style("font-size", "18px")
+            .text("Age group");
     
           // DRAW BARS
+
+        var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
         leftBarGroup.selectAll('.bar.left')
           .data(exampleData)
           .enter().append('rect')
             .attr('class', 'bar left')
             .attr('x', 0)
             .attr('y', function(d) { return yScale(d.Age); })
-            .attr('width', function(d) { return xScale(percentageM(d.M)); })
+            .attr('width', function(d) { return xScale(percentageF(d.F)); })
             .attr('height', yScale.rangeBand())
             .style("fill", "rgb(246, 51, 213)")
-            .on('mouseover', function(){
+            .on('mouseover', function(d){
                 d3.select(this)
                   .attr('style', 'fill: orange;');
                 
-                var select = document.getElementById("debug");
-                select.innerHTML = d3.select(this).attr("y")*1000;
+                tooltip
+                  .style("left", d3.event.pageX - 50 + "px")
+                  .style("top", d3.event.pageY - 70 + "px")
+                  .style("display", "inline-block")
+                  .html("Estimate women (in thousand): " + d.F );  
             })
             .on('mouseout', function(){
                 d3.select(this)
                   .style("fill", "rgb(246, 51, 213)");
+                
+                tooltip.style("display", "none");
             });
 
         rightBarGroup.selectAll('.bar.right')
@@ -180,19 +223,24 @@
             .attr('class', 'bar right')
             .attr('x', 0)
             .attr('y', function(d) { return yScale(d.Age); })
-            .attr('width', function(d) { return xScale(percentageF(d.F)); })
+            .attr('width', function(d) { return xScale(percentageM(d.M)); })
             .attr('height', yScale.rangeBand())
             .style("fill", "rgb(0, 0, 255)")
-            .on('mouseover', function(){
+            .on('mouseover', function(d){
                 d3.select(this)
                   .attr('style', 'fill: orange;');
 
-                var select = document.getElementById("debug");
-                select.innerHTML = d3.select(this).attr("y")*1000;
+                tooltip
+                  .style("left", d3.event.pageX - 50 + "px")
+                  .style("top", d3.event.pageY - 70 + "px")
+                  .style("display", "inline-block")
+                  .html("Estimate men (in thousand): " + (d.M) );  
             })
             .on('mouseout', function(){
                 d3.select(this)
                   .style("fill", "rgb(0, 0, 255)");
+
+                  tooltip.style("display", "none");
             });
       }
       function changeData(){
@@ -244,7 +292,26 @@
       <select id="sYear" onchange="countryChange(this.value);">
         <option>Choose Year</option>
       </select>
+
+      <input type="range" min="1950" max="2020" step="5" list="steplist">
+      <datalist id="steplist">
+          <option>0</option>
+      </datalist>
+
     </form>
+
+    <script lang="javascript">
+      var select = document.getElementById("steplist");
+      var options = ["1950", "1955", "1960", "1965", "1970", "1975", "1980", "1985", "1990", "1995", "2000", "2005", "2010", "2015", "2020"];
+      
+      for(var i = 0; i < options.length; i++) {
+        var opt = options[i];
+        var el = document.createElement("option");
+        el.textContent = opt;
+        el.value = opt;
+        select.appendChild(el);
+      }
+    </script>
 
     <script lang="javascript">
       var select = document.getElementById("sYear");
