@@ -197,10 +197,10 @@
             .attr('class', 'bar left')
             .attr('x', 0)
             .attr('y', function(d) { return yScale(d.Age); })
-            .attr('width', function(d) { return xScale(percentageM(d.M)); })
+            .attr('width', function(d) { return xScale(percentageF(d.F)); })
             .attr('height', yScale.rangeBand())
             .style("fill", "rgb(246, 51, 213)")
-            .on('mouseover', function(){
+            .on('mouseover', function(d){
                 d3.select(this)
                   .attr('style', 'fill: orange;');
                 
@@ -208,7 +208,7 @@
                   .style("left", d3.event.pageX - 50 + "px")
                   .style("top", d3.event.pageY - 70 + "px")
                   .style("display", "inline-block")
-                  .html("Estimate women: " + (d3.select(this).attr("y")*1000) );  
+                  .html("Estimate women (in thousand): " + d.F );  
             })
             .on('mouseout', function(){
                 d3.select(this)
@@ -223,10 +223,10 @@
             .attr('class', 'bar right')
             .attr('x', 0)
             .attr('y', function(d) { return yScale(d.Age); })
-            .attr('width', function(d) { return xScale(percentageF(d.F)); })
+            .attr('width', function(d) { return xScale(percentageM(d.M)); })
             .attr('height', yScale.rangeBand())
             .style("fill", "rgb(0, 0, 255)")
-            .on('mouseover', function(){
+            .on('mouseover', function(d){
                 d3.select(this)
                   .attr('style', 'fill: orange;');
 
@@ -234,7 +234,7 @@
                   .style("left", d3.event.pageX - 50 + "px")
                   .style("top", d3.event.pageY - 70 + "px")
                   .style("display", "inline-block")
-                  .html("Estimate men: " + (d3.select(this).attr("y")*1000) );  
+                  .html("Estimate men (in thousand): " + (d.M) );  
             })
             .on('mouseout', function(){
                 d3.select(this)

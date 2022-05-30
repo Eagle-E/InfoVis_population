@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 
 def build_cvs():
-    df_male = pd.read_csv('./data/Nation_Age_Men.csv', delimiter=';')
-    df_female = pd.read_csv('./data/Nation_Age_Men.csv', delimiter=';')
+    df_male = pd.read_csv('../data/RAW/Nation_Age_Men.csv', delimiter=';')
+    df_female = pd.read_csv('../data/RAW/Nation_Age_Women.csv', delimiter=';')
 
     years = df_male['Date'].unique()
     countries = df_male['Region'].unique()
@@ -15,7 +15,7 @@ def build_cvs():
 
     for C in countries:
         df_country_male = df_male.loc[df_male['Region'] == C]
-        df_country_female = df_male.loc[df_female['Region'] == C]
+        df_country_female = df_female.loc[df_female['Region'] == C]
 
         for Y in years:
             df_y_male = df_country_male.loc[df_country_male['Date'] == Y]
@@ -25,13 +25,18 @@ def build_cvs():
             for A in ages:
                 sdata = []
                 sdata.append(A)
+                # try:
+                #     print(str(df_y_female.iloc[0][A]))
+                # except:
+                #     print("Man :::: "+str(df_y_male.iloc[0][A]))
+
                 sdata.append(str(df_y_male.iloc[0][A]).replace(" ", ""))
                 sdata.append(str(df_y_female.iloc[0][A]).replace(" ", ""))
                 data.append(sdata)
 
             
             newC = C.translate({ord(ch): "_" for ch in "/"})
-            f_name = './data/popCountries/'+str(newC)+'_'+str(Y)+'.csv'
+            f_name = '../data/popCountries/'+str(newC)+'_'+str(Y)+'.csv'
             d = pd.DataFrame(data, columns=['Age', 'M', 'F'])
             d.to_csv(f_name, index=False, sep=',')
 
