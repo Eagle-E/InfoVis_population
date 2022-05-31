@@ -28,28 +28,32 @@
 </head> 
 
 <body>
-    <div class="topnav">
-        <a class="active" href="../Pages/worldmap_population.html">Worldmap</a>
-        <a onclick="sendDataToAbout();">Population Pyramide</a>
-        <a href="#p3">R-page</a>
-        <a href="#aboutPage">About</a>
-    </div>
-
-    <div id="ui_wrapper">
-        <h1 id="page_title">World Population</h1>
+    <div id="ui_wrapper">        
         
+        <div class="topnav">
+            <a class="active" href="../Pages/worldmap_population.html">Worldmap</a>
+            <a onclick="sendDataToAbout();">Population Pyramide</a>
+            <a href="#p3">R-page</a>
+            <a href="#aboutPage">About</a>
+        </div>
+
         <div id="worldmap_wrapper">
+            <!-- <h1 id="worldmap_title">World Population</h1> -->
+            <svg id="worldmap_title">
+                <text y="90" id="worldmap_title_txt"></text>
+            </svg>
+
             <svg id="worldmap"></svg>
-            <div id="worldmap_footer">
-                <div id="div_slider">
-                    <input type="text" id="slider_year" name="year" value="" />
-                    <!-- <input type="range" min="1" max="100" value="50" class="slider" id="slider_year" name="year"> -->
-                    <!-- <label for="year">Year</label> -->
-                </div>
+        </div>
+        <div id="worldmap_footer">
+            <div id="div_slider">
+                <input type="text" id="slider_year" name="year" value="" />
+                <!-- <input type="range" min="1" max="100" value="50" class="slider" id="slider_year" name="year"> -->
+                <!-- <label for="year">Year</label> -->
             </div>
         </div>
-    </div>
 
+    </div>
     
     
 
@@ -62,6 +66,7 @@
         var width = svgBounds.width;
         var height = svgBounds.height;
         console.log(`worldmap svg: (w, h) = (${svgBounds.width}, ${svgBounds.height})`);
+        var countryClicked = false;
 
         // The projection object for rescaling data to the size of the ui
         var path = d3.geoPath();
@@ -98,49 +103,132 @@
 
         // get the population data
         let populationData = null;
-        var countryPopulation = d3.map();
 
         fetch("http://localhost:8000/data/population.json")
         .then(response => response.json())
         .then(json => {
             populationData = json;
             d3.queue()
-              .defer(d3.json, "http://localhost:8000/data/world.geojson.txt")
-              .defer(d3.csv, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv", 
-                      function(d) { countryPopulation.set(d.code, d.pop); })
+              .defer(d3.json, "http://localhost:8000/data/world.geojson")
               .await(ready);
         })
 
         function ready(error, topo) 
         {
-            let mouseOver = function(countryPath) {
-                d3.selectAll(".Country")
-                  .transition()
-                  .duration(200)
-                  .style("opacity", .5)
-                  .style("stroke", "#979797");
-
-                  d3.select(this)
+            let mouseOverCountry = function(data, index) {
+                // FOCUS
+                {
+                    d3.selectAll(".Country")
+                    .transition()
+                    .duration(200)
+                    .style("opacity", .5)
+                    .style("stroke", "#979797");
+                    
+                    d3.select(this)
                     .transition()
                     .duration(200)
                     .style("opacity", 1)  
                     .style("stroke", "black");
+                }
+
+                // TITLE
+                {
+                    let countryName = data.properties.name;
+                    title = d3.select("#worldmap_title_txt");
+                    title.html(countryName);
+                    var titleBounds = title.node().getBoundingClientRect();
+                    var tw = titleBounds.width;
+                    var th = titleBounds.height;
+                    var windowBounds = d3.select("body").node().getBoundingClientRect();
+                    var ww = windowBounds.width;
+                    var wh = windowBounds.height;
+
+                    title.attr("x", ww/2 - tw/2);
+                }
+
             }
         
-            let mouseLeave = function(countryPath) {
-                d3.selectAll(".Country")
-                .transition()
-                .duration(200)
-                .style("opacity", 1)
-                .style("stroke", "#979797")
-                
-                d3.select(this)
-                .transition()
-                .duration(200)
+            let mouseLeaveCountry = function(data, index) {
+                // UNFOCUS
+                {
+                    d3.selectAll(".Country")
+                    .transition()
+                    .duration(200)
+                    .style("opacity", 1)
+                    .style("stroke", "#979797")
+                    
+                    d3.select(this)
+                    .transition()
+                    .duration(200)
                     // .style("opacity", .8)
                     .style("stroke", "#979797")
+                }
+
+                // TOOLTIP
+                {
+                    
+                    
+                }
+
+                // TITLE
+                {
+                    d3.select("#worldmap_title_txt").html("");
+                }
+
+            }
+
+            let mouseClickCountry = function(data, index){
+                countryClicked = true;
+                
+                // TOOLTIP
+                {
+                    // remove previous tooltips
+                    d3.selectAll(".tooltip").remove();
+
+                    // create the new tooltip
+                    let countryName = data.properties.name;
+                    let year = d3.select("#slider_year").attr("value");
+
+                    // add a new tooltip
+                    var tooltip = d3.select("body")
+                                    .append("div")
+                                    .attr("class", "tooltip " + ("tooltip-" + countryName).replaceAll(' ', '-'));
+
+                    tooltip.style("left", d3.event.pageX + 70 + "px")
+                            .style("top", d3.event.pageY  + "px")
+                            .append("h1")
+                            .html(countryName)
+                            .attr("class", "tooltipTitle");
+
+                    tooltip.append("h2")
+                            .html("Population (" + year + ")")
+                            .attr("class", "tooltipSubTitle");
+
+                    tooltip.append("p")
+                            .html("Male: " + populationData[countryName][year]["totalMen"])
+                            .attr("class", "tooltipText");
+                    tooltip.append("p")
+                            .html("Femal: " + populationData[countryName][year]["totalWomen"])
+                            .attr("class", "tooltipText");
+                    tooltip.append("p")
+                            .html("Total: " + populationData[countryName][year]["total"])
+                            .attr("class", "tooltipText");
+                }
+
+                
             }
         
+            let mouseClickOcean = function(data, index){
+                if (countryClicked)
+                {
+                    countryClicked = false;
+                    return;
+                }
+                
+                // remove previous tooltips
+                d3.selectAll(".tooltip").remove();
+            }
+
             // init the slider
             ionRangeSlider('#slider_year', {
                 min: 1950,
@@ -152,11 +240,21 @@
                 grid_num: 14,
                 prettify_enabled: false,
                 onChange: function(val){
-                    // alert(d3.select("#slider_year").attr("value"));
+                    year = d3.select("#slider_year").attr("value");
+                    svg.selectAll("path")
+                        .attr("fill", function(data, index){
+                            let countryName = data.properties.name;
+                            if (countryName in populationData)
+                            {
+                                let population = populationData[countryName][year]["total"] * 1000
+                                return colorScale(population || 0);
+                            }
+                        })
                 }
             });            
 
             // Draw the map
+            svg.on("click", mouseClickOcean)
             svg.append("g")
                 .attr('id', 'countriesGroup')
                 .selectAll("path")
@@ -182,8 +280,9 @@
                 .style("stroke-width", "0.5px")
                 .attr("class", function(d){ return "Country" } )
                 .style("opacity", .8)
-                .on("mouseover", mouseOver )
-                .on("mouseleave", mouseLeave )
+                .on("mouseover", mouseOverCountry )
+                .on("mouseleave", mouseLeaveCountry )
+                .on("click", mouseClickCountry)
            
             // zoom and pan
             svg.call(d3.zoom()

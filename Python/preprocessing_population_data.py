@@ -48,9 +48,15 @@ def get_data():
             for region in data.keys():
                 for year in data[region].keys():
                     total = 0
+                    totalMen = 0
+                    totalWomen = 0
                     for _, d in data[region][year].items():
                         total += d['total']
+                        totalMen += d['men']
+                        totalWomen += d['women']
                     data[region][year]['total'] = total
+                    data[region][year]['totalMen'] = totalMen
+                    data[region][year]['totalWomen'] = totalWomen
                     
 
 
