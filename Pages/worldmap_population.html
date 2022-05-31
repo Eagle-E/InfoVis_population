@@ -54,25 +54,7 @@
     
 
      
-    <script>
-        // get the population data
-        populationData = null;
-        fetch("http://localhost:8000/data/population.json")
-            .then(response => response.json())
-            .then(json => {populationData = json;});
-
-        
-
-        // init the slider
-        ionRangeSlider('#slider_year', {
-            min: 0,
-            max: 1000,
-            prefix: "",
-            grid: true,
-            grid_num: 5,
-            step: 100,
-        });
-
+    <script>        
         // Get worldmap svg size
         var svg = d3.select("svg#worldmap");
         var svgWrapper = d3.select('#worldmap_wrapper');
@@ -113,13 +95,21 @@
         //   .domain(colorRanges)
         //   .range(d3.schemeBlues[colorRanges.lenght + 1]);
 
-        // Load external data and boot
+
+        // get the population data
+        let populationData = null;
         var countryPopulation = d3.map();
-        d3.queue()
-          .defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
-          .defer(d3.csv, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv", 
-                function(d) { countryPopulation.set(d.code, d.pop); })
-          .await(ready);
+
+        fetch("http://localhost:8000/data/population.json")
+        .then(response => response.json())
+        .then(json => {
+            populationData = json;
+            d3.queue()
+              .defer(d3.json, "http://localhost:8000/data/world.geojson.txt")
+              .defer(d3.csv, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv", 
+                      function(d) { countryPopulation.set(d.code, d.pop); })
+              .await(ready);
+        })
 
         function ready(error, topo) 
         {
@@ -151,7 +141,20 @@
                     .style("stroke", "#979797")
             }
         
-            
+            // init the slider
+            ionRangeSlider('#slider_year', {
+                min: 1950,
+                max: 2020,
+                step: 5,
+                from: 2020,
+                prefix: "year ",
+                grid: true,
+                grid_num: 14,
+                prettify_enabled: false,
+                onChange: function(val){
+                    // alert(d3.select("#slider_year").attr("value"));
+                }
+            });            
 
             // Draw the map
             svg.append("g")
@@ -163,8 +166,17 @@
                 // draw each country
                 .attr("d", d3.geoPath().projection(projection))
                 // set the color of each country
-                .attr("fill", function (d) {
-                    return colorScale(countryPopulation.get(d.id) || 0);
+                .attr("fill", function (feature) {
+                    let countryName = feature.properties.name;
+                    if (countryName in populationData)
+                    {
+                        let year = parseInt(d3.select("#slider_year").attr("value"));
+                        let population = populationData[countryName][year]["total"] * 1000
+                        return colorScale(population || 0);
+                    }
+                    else{
+                        console.log(countryName)
+                    }
                 })
                 .style("stroke", "#979797")
                 .style("stroke-width", "0.5px")
@@ -176,7 +188,7 @@
             // zoom and pan
             svg.call(d3.zoom()
                 .on("zoom", function () {
-                    svg.selectAll('g#countriesGroup').attr("transform", d3.event.transform)
+                        svg.selectAll('g#countriesGroup').attr("transform", d3.event.transform)
                     }
                 ));
 
@@ -187,6 +199,8 @@
                 .append(() => legend)
                 .lower()
                 .attr('id', 'legend');
+
+            
         }
 
 

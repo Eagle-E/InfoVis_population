@@ -44,6 +44,16 @@ def get_data():
                     data[region][year][ages[j]]["women"] = nWomen
                     data[region][year][ages[j]]["total"] = nMen + nWomen
                     
+            # also add total of all age groups together
+            for region in data.keys():
+                for year in data[region].keys():
+                    total = 0
+                    for _, d in data[region][year].items():
+                        total += d['total']
+                    data[region][year]['total'] = total
+                    
+
+
     except EnvironmentError:
         return {}
 
