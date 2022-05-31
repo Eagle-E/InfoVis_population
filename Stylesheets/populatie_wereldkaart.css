@@ -93,7 +93,10 @@ path {
 
 .tooltip {
     position: absolute;
-    display: inline-block;
+    display: grid;
+    grid-gap: 8px;
+    grid-column-gap: 32px;
+    grid-template-columns: 1fr max-content;
     min-width: 80px;
     background:#ffffff;
     border: 1px solid #6F257F;
@@ -121,9 +124,74 @@ path {
     font-size: 1rem;
     color:rgb(50, 50, 50);
     text-align: left;
-    margin: 4px 0 4px 0;
+    /* margin: 4px 0 4px 0; */
 }
+
+
+
+.tooltipBtn{
+    display: flex;
+    justify-self: center;
+    align-self: center;
+}
+
+.col1{
+    grid-column: 1;
+}
+
+.col2{
+    grid-column: 2;
+}
+
+.row1{
+    grid-row: 1;
+}
+
+.row2{
+    grid-row: 2;
+}
+
+tooltip:nth-child(3) {
+    background: #eee;
+    display: flex;
+    justify-content: flex-end;
+  }
 
 .topnav{
     width: 100%;
+}
+
+
+/* nice button */
+.button {
+    align-items: center;
+    appearance: button;
+    background-color: #0276FF;
+    border-radius: 8px;
+    border-style: none;
+    box-shadow: rgba(255, 255, 255, 0.26) 0 1px 2px inset;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 0;
+    font-size: 100%;
+    line-height: 1.15;
+    margin: 0;
+    padding: 6px 14px;
+    text-align: center;
+    text-transform: none;
+    transition: color .13s ease-in-out,background .13s ease-in-out,opacity .13s ease-in-out,box-shadow .13s ease-in-out;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.button:active {
+    background-color: #006AE8;
+}
+
+.button:hover {
+    background-color: #2787fc;
 }

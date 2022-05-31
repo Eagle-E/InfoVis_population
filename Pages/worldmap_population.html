@@ -57,7 +57,6 @@
     
     
 
-     
     <script>        
         // Get worldmap svg size
         var svg = d3.select("svg#worldmap");
@@ -192,27 +191,36 @@
                     // add a new tooltip
                     var tooltip = d3.select("body")
                                     .append("div")
-                                    .attr("class", "tooltip " + ("tooltip-" + countryName).replaceAll(' ', '-'));
+                                    .attr("class", "tooltip " + ("tooltip-" + countryName).replaceAll(' ', '-'))
+                                    .style("display", "grid")
+                                    .style("grid-template-columns", "1fr max-content");
 
                     tooltip.style("left", d3.event.pageX + 70 + "px")
                             .style("top", d3.event.pageY  + "px")
                             .append("h1")
                             .html(countryName)
-                            .attr("class", "tooltipTitle");
+                            .attr("class", "tooltipTitle")
+                            .style("grid-column", "span 2");
+
+                    tooltip.append("input")
+                            .attr("type", "button")
+                            .attr("value", "compare age groups")
+                            .on("click", to_pyramid_page)
+                            .attr("class", "tooltipBtn button col2 row2");
 
                     tooltip.append("h2")
                             .html("Population (" + year + ")")
-                            .attr("class", "tooltipSubTitle");
+                            .attr("class", "tooltipSubTitle col1");
 
                     tooltip.append("p")
                             .html("Male: " + populationData[countryName][year]["totalMen"])
-                            .attr("class", "tooltipText");
+                            .attr("class", "tooltipText col1");
                     tooltip.append("p")
                             .html("Femal: " + populationData[countryName][year]["totalWomen"])
-                            .attr("class", "tooltipText");
+                            .attr("class", "tooltipText col1");
                     tooltip.append("p")
                             .html("Total: " + populationData[countryName][year]["total"])
-                            .attr("class", "tooltipText");
+                            .attr("class", "tooltipText col1");
                 }
 
                 
@@ -303,6 +311,12 @@
         }
 
 
+
+
+    function to_pyramid_page()
+    {
+        alert("lesgooooo")
+    }
 
     </script>
     
