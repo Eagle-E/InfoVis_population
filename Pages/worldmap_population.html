@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../Stylesheets/base.css">
     <link rel="stylesheet" href="../Stylesheets/rangeslider.css">
     <link rel="stylesheet" href="../Stylesheets/populatie_wereldkaart.css">
+    <link rel="stylesheet" href="../Stylesheets/nav.css">
 
     <!-- D3 IMPORTS -->
     <!-- <script src="package/dist/d3.min.js"></script> -->
@@ -15,9 +16,24 @@
     <script src="https://d3js.org/topojson.v1.min.js"></script>
     <script src="../Scripts/Legend.js"></script>
     <script src="../Scripts/rangeslider.js"></script>
+
+    <script lang="javascript">
+      function sendDataToAbout(){
+        var href="../Pages/about.html"
+        var id = "007"
+        const options = ["Belgium","France","Germany","Luxembourg","Netherlands","Switzerland","Canada","United States of America"];
+        window.location.href = "../Pages/pyramid.html?filename=" + id+"&"+"lands="+options;
+      }
+    </script>
 </head> 
 
 <body>
+    <div class="topnav">
+        <a class="active" href="../Pages/worldmap_population.html">Worldmap</a>
+        <a onclick="sendDataToAbout();">Population Pyramide</a>
+        <a href="#p3">R-page</a>
+        <a href="#aboutPage">About</a>
+    </div>
 
     <div id="ui_wrapper">
         <h1 id="page_title">World Population</h1>
