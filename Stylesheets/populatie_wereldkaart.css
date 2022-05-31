@@ -42,3 +42,30 @@ path {
 #legend{
     margin: 0 auto;
 }
+
+#worldmap_footer{
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    align-items: center;
+    justify-items: center;
+    padding: 8px;
+}
+
+.slider_year{
+    min-width: 600px;
+    max-width: 600px;
+}
+
+#div_slider{
+    min-width: 600px;
+    max-width: 600px;
+}
+
+
+
+
+.irs-grid-text, .irs-min, .irs-max{
+    font-size: 12px !important;
+}

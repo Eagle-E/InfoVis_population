@@ -4,6 +4,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="../Stylesheets/reset.css">
     <link rel="stylesheet" href="../Stylesheets/base.css">
+    <link rel="stylesheet" href="../Stylesheets/rangeslider.css">
     <link rel="stylesheet" href="../Stylesheets/populatie_wereldkaart.css">
 
     <!-- D3 IMPORTS -->
@@ -13,6 +14,7 @@
     <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
     <script src="../Scripts/Legend.js"></script>
+    <script src="../Scripts/rangeslider.js"></script>
 </head> 
 
 <body>
@@ -22,6 +24,13 @@
         
         <div id="worldmap_wrapper">
             <svg id="worldmap"></svg>
+            <div id="worldmap_footer">
+                <div id="div_slider">
+                    <input type="text" id="slider_year" name="year" value="" />
+                    <!-- <input type="range" min="1" max="100" value="50" class="slider" id="slider_year" name="year"> -->
+                    <!-- <label for="year">Year</label> -->
+                </div>
+            </div>
         </div>
     </div>
 
@@ -30,6 +39,24 @@
 
      
     <script>
+        // get the population data
+        populationData = null;
+        fetch("http://localhost:8000/data/population.json")
+            .then(response => response.json())
+            .then(json => {populationData = json;});
+
+        
+
+        // init the slider
+        ionRangeSlider('#slider_year', {
+            min: 0,
+            max: 1000,
+            prefix: "",
+            grid: true,
+            grid_num: 5,
+            step: 100,
+        });
+
         // Get worldmap svg size
         var svg = d3.select("svg#worldmap");
         var svgWrapper = d3.select('#worldmap_wrapper');
@@ -44,17 +71,12 @@
           .scale(150)
           .center([50,-20])
           .translate([width / 2, height / 2]);
-        
-        // Color scheme of the countries based on population
-        //   - Shades of green: hundreds of thousands and millions
-        //   - Shades of blue: tens of millions
-        //   - Shades of red: hundreds of millions and more
-        // Until 100 million use shades of blue, use shades
-        // of red for countries having > 100 million inhabitants
-        // categories:
-        //       GREEN                  |     BLUE                  |      RED
-        //  500k  1mil  2.5mil  5mil  10mil  25mil  50mil  75mil  100mil 325mil 550mil 775mil 1000mil
-        var data = d3.map();
+
+        /*
+        Color scheme of the countries based on population
+                   GREEN            |          BLUE             |            RED
+        500k  1mil  2.5mil  5mil  10mil  25mil  50mil  75mil  100mil 325mil 550mil 775mil 1000mil
+        */
         colorRanges = [
             500000, 1000000, 2500000, 5000000, 10000000,    // GREEN 
             25000000, 50000000, 75000000, 100000000,        // BLUE
@@ -76,10 +98,11 @@
         //   .range(d3.schemeBlues[colorRanges.lenght + 1]);
 
         // Load external data and boot
+        var countryPopulation = d3.map();
         d3.queue()
           .defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
           .defer(d3.csv, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv", 
-                function(d) { data.set(d.code, +d.pop); })
+                function(d) { countryPopulation.set(d.code, d.pop); })
           .await(ready);
 
         function ready(error, topo) 
@@ -122,13 +145,10 @@
                 .enter()
                 .append("path") 
                 // draw each country
-                .attr("d", d3.geoPath()
-                .projection(projection)
-                )
+                .attr("d", d3.geoPath().projection(projection))
                 // set the color of each country
                 .attr("fill", function (d) {
-                    d.total = data.get(d.id) || 0;
-                    return colorScale(d.total);
+                    return colorScale(countryPopulation.get(d.id) || 0);
                 })
                 .style("stroke", "#979797")
                 .style("stroke-width", "0.5px")
@@ -147,17 +167,14 @@
             // add legend
             legend = Legend(colorScale, {title: "", tickFormat: "", tickSize: 10});
 
-            d3.select('#worldmap_wrapper')
+            d3.select('#worldmap_footer')
                 .append(() => legend)
+                .lower()
                 .attr('id', 'legend');
-
-            
-            // svgWrapper.data([1])
-                    //   .enter().append(legend);
-
         }
 
-        
+
+
     </script>
     
 

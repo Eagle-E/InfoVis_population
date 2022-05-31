@@ -43,8 +43,7 @@ def get_data():
                     data[region][year][ages[j]]["men"] = nMen
                     data[region][year][ages[j]]["women"] = nWomen
                     data[region][year][ages[j]]["total"] = nMen + nWomen
-
-
+                    
     except EnvironmentError:
         return {}
 
