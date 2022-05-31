@@ -37,9 +37,22 @@
         }
     </style>
 
+    <script lang="javascript">
+
+      function loader(){
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        var paramValue = url.searchParams.get("key");
+        console.log(paramValue)
+      }
+
+    </script>
+
+
+
 </head>
 
-<body onload="changeData()"> 
+<body onload="loader()"> 
 
   <div class="topnav">
     <a href="#p1">S-Page</a>
@@ -60,7 +73,5 @@
       Data sets (CSV files that you used, or a file with the link(s) to where we can download them)
      </p>
   </div>
-
-
 </body>
 </html>

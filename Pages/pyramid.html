@@ -4,6 +4,8 @@
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="../Scripts/jquery.csv.js"></script>
     <link rel="stylesheet" href="../Stylesheets/nav.css">
+    <script src="../Scripts/rangeslider.js"></script>
+    <link rel="stylesheet" href="../Stylesheets/rangeslider.css">
 
     <style>
         svg {
@@ -37,16 +39,24 @@
         .sliderYear{
           width: 750px !important;
         }
+
+        .flex-container {
+            display: flex;
+        }
+
+        .flex-child {
+            flex: 1;
+        }  
+
+        .flex-child:first-child {
+            margin-right: 5px;
+        } 
     </style>
 
     <script language="javascript">
-      function countryChange(value){
-        changeData();
-      }
       function translation(x,y) {
         return 'translate(' + x + ',' + y + ')';
       }
-
       function draw_pyramide(exampleData){
         // SET UP DIMENSIONS
         var w = window.innerWidth*0.66,
@@ -252,14 +262,12 @@
         var e = document.getElementById("sLand");
         var v = e.value;
         
-        var e2 = document.getElementById('slide');
+        var e2 = document.getElementById('slider_year');
         var v2 = e2.value;
 
         if(v == "Choose Country"){
           v = "WORLD";
         }
-        var select = document.getElementById("debug");
-        select.innerHTML = v + " :: " + v2;
 
         var c = v;
         var y = v2;
@@ -268,136 +276,136 @@
           draw_pyramide(data);
         });
       }
+      function sendDataToAbout(){
+        var href="../Pages/about.html"
+        var id = "007"
+        const cars = ["Saab", "Volvo", "BMW"];
+        window.location.href = "../Pages/about.html?filename=" + id+"&"+"key="+cars;
+      }
     </script>
 </head>
 
 <body onload="changeData()"> 
-  <script lang="javascript">
-    window.addEventListener('resize', changeData);
-  </script>
+  <script lang="javascript"> window.addEventListener('resize', changeData); </script>
 
+  
   <div class="topnav">
-    <a href="#p1">S-Page</a>
+    <a href="../Pages/worldmap_population.html">Worldmap</a>
     <a class="active" href="../Pages/pyramid.html">Population Pyramide</a>
     <a href="#p3">R-page</a>
-    <a href="../Pages/about.html">About</a>
+    <a onclick="sendDataToAbout();">About</a>
   </div>
 
-  <div>
-    <h1> Population pyramide</h1>
-    <p id="debug"> Design is under construction...</p>
-  </div>
+  <h1> Population pyramide</h1>
 
-  <div id="selectorz">
-    <form id="myForm">
-      <select id="sLand" onchange="countryChange(this.value);">
-        <option>Choose Country</option>
-      </select>
-
-      <input id="slide" class="sliderYear" type="range" min="1950" max="2020" value="2000" step="5" list="steplist">
-
-    </form>
+  <div id="div_slider">
+    <input type="text" id="slider_year" name="year" value="" />
 
     <script lang="javascript">
-      var select = document.getElementById("steplist");
-      var options = ["1950", "1955", "1960", "1965", "1970", "1975", "1980", "1985", "1990", "1995", "2000", "2005", "2010", "2015", "2020"];
-      
-      for(var i = 0; i < options.length; i++) {
-        var opt = options[i];
-        var el = document.createElement("option");
-        el.textContent = opt;
-        el.value = opt;
-        select.appendChild(el);
-      }
-    </script>
+      ionRangeSlider('#slider_year', {
+          min: 1950,
+          max: 2020,
+          prefix: "Year: ",
+          grid: true,
+          grid_num: 14,
+          step: 5,
+      });
 
-    <script lang="javascript">
-      var select = document.getElementById("sLand");
-      var options = 
-      ["WORLD","UN development groups", "More developed regions",
-      "Less developed regions", "Least developed countries",
-      "Less developed regions, excluding least developed countries",
-      "Less developed regions, excluding China",
-      "Land-locked Developing Countries (LLDC)",
-      "Small Island Developing States (SIDS)", "World Bank income groups",
-      "High-income countries",,"Middle-income countries",
-      "Upper-middle-income countries", "Lower-middle-income countries",
-      "Low-income countries","No income group available","Geographic regions",
-      "Africa","Asia","Europe","Latin America and the Caribbean",
-      "Northern America","Oceania","Sustainable Development Goal (SDG) regions",
-      "SUB-SAHARAN AFRICA","Eastern Africa","Burundi","Comoros","Djibouti",
-      "Eritrea","Ethiopia","Kenya","Madagascar","Malawi","Mauritius","Mayotte",
-      "Mozambique","Réunion","Rwanda","Seychelles","Somalia","South Sudan",
-      "Uganda","United Republic of Tanzania","Zambia","Zimbabwe",
-      "Middle Africa","Angola","Cameroon","Central African Republic","Chad",
-      "Congo","Democratic Republic of the Congo","Equatorial Guinea","Gabon",
-      "Sao Tome and Principe","Southern Africa","Botswana","Eswatini","Lesotho",
-      "Namibia","South Africa","Western Africa","Benin","Burkina Faso",
-      "Cabo Verde","Côte d'Ivoire","Gambia","Ghana","Guinea","Guinea-Bissau",
-      "Liberia","Mali","Mauritania","Niger","Nigeria","Senegal","Sierra Leone",
-      "Togo","NORTHERN AFRICA AND WESTERN ASIA","Northern Africa","Algeria",
-      "Egypt","Libya","Morocco","Sudan","Tunisia","Western Sahara",
-      "Western Asia","Armenia","Azerbaijan","Bahrain","Cyprus","Georgia","Iraq",
-      "Israel","Jordan","Kuwait","Lebanon","Oman","Qatar","Saudi Arabia",
-      "State of Palestine","Syrian Arab Republic","Turkey",
-      "United Arab Emirates","Yemen","CENTRAL AND SOUTHERN ASIA","Central Asia",
-      "Kazakhstan","Kyrgyzstan","Tajikistan","Turkmenistan","Uzbekistan",
-      "Southern Asia","Afghanistan","Bangladesh","Bhutan","India",
-      "Iran (Islamic Republic of)","Maldives","Nepal","Pakistan","Sri Lanka",
-      "EASTERN AND SOUTH-EASTERN ASIA","Eastern Asia","China",
-      "China, Hong Kong SAR","China, Macao SAR",
-      "China, Taiwan Province of China","Dem. People's Republic of Korea",
-      "Japan","Mongolia","Republic of Korea","South-Eastern Asia",
-      "Brunei Darussalam","Cambodia","Indonesia",
-      "Lao People's Democratic Republic","Malaysia","Myanmar","Philippines",
-      "Singapore","Thailand","Timor-Leste","Viet Nam",
-      "LATIN AMERICA AND THE CARIBBEAN","Caribbean","Antigua and Barbuda",
-      "Aruba","Bahamas","Barbados","Cuba","Curaçao","Dominican Republic",
-      "Grenada","Guadeloupe","Haiti","Jamaica","Martinique","Puerto Rico",
-      "Saint Lucia","Saint Vincent and the Grenadines","Trinidad and Tobago",
-      "United States Virgin Islands","Central America","Belize","Costa Rica",
-      "El Salvador","Guatemala","Honduras","Mexico","Nicaragua","Panama",
-      "South America","Argentina","Bolivia (Plurinational State of)","Brazil",
-      "Chile","Colombia","Ecuador","French Guiana","Guyana","Paraguay","Peru",
-      "Suriname","Uruguay","Venezuela (Bolivarian Republic of)",
-      "AUSTRALIA/NEW ZEALAND","Australia","New Zealand",
-      "OCEANIA (EXCLUDING AUSTRALIA AND NEW ZEALAND)","Melanesia","Fiji",
-      "New Caledonia","Papua New Guinea","Solomon Islands","Vanuatu",
-      "Micronesia","Guam","Kiribati","Micronesia (Fed. States of)","Polynesia",
-      "French Polynesia","Samoa","Tonga","EUROPE AND NORTHERN AMERICA","EUROPE",
-      "Eastern Europe","Belarus","Bulgaria","Czechia","Hungary","Poland",
-      "Republic of Moldova","Romania","Russian Federation","Slovakia","Ukraine",
-      "Northern Europe","Channel Islands","Denmark","Estonia","Finland",
-      "Iceland","Ireland","Latvia","Lithuania","Norway","Sweden",
-      "United Kingdom","Southern Europe","Albania","Bosnia and Herzegovina",
-      "Croatia","Greece","Italy","Malta","Montenegro","North Macedonia",
-      "Portugal","Serbia","Slovenia","Spain","Western Europe","Austria",
-      "Belgium","France","Germany","Luxembourg","Netherlands","Switzerland",
-      "NORTHERN AMERICA","Canada","United States of America"];
-      
-      for(var i = 0; i < options.length; i++) {
-        var opt = options[i];
-        var el = document.createElement("option");
-        el.textContent = opt;
-        el.value = opt;
-        select.appendChild(el);
-      }
-    </script>
-
-    <script lang="javascript">
-      var slide = document.getElementById('slide');
-
-      var select = document.getElementById("debug");
-      select.innerHTML = "CLICKED LEFT";
-
+      var slide = document.getElementById('slider_year');
       slide.onchange = function() {
-          select.innerHTML = this.value;
           changeData();
       }
     </script>
   </div>
 
-  <div id="pyramide"></div>
+  <div class="flex-container">
+    <div class="flex-child magenta">
+      <div id="pyramide"></div>
+    </div>
+    <div class="flex-child green">
+      
+      <div id="div_land">
+        <select id="sLand" onchange="changeData();">
+          <option>Choose Country</option>
+        </select>
+    
+        <script lang="javascript">
+          var select = document.getElementById("sLand");
+          var options = 
+          ["WORLD","UN development groups", "More developed regions",
+          "Less developed regions", "Least developed countries",
+          "Less developed regions, excluding least developed countries",
+          "Less developed regions, excluding China",
+          "Land-locked Developing Countries (LLDC)",
+          "Small Island Developing States (SIDS)", "World Bank income groups",
+          "High-income countries",,"Middle-income countries",
+          "Upper-middle-income countries", "Lower-middle-income countries",
+          "Low-income countries","No income group available","Geographic regions",
+          "Africa","Asia","Europe","Latin America and the Caribbean",
+          "Northern America","Oceania","Sustainable Development Goal (SDG) regions",
+          "SUB-SAHARAN AFRICA","Eastern Africa","Burundi","Comoros","Djibouti",
+          "Eritrea","Ethiopia","Kenya","Madagascar","Malawi","Mauritius","Mayotte",
+          "Mozambique","Réunion","Rwanda","Seychelles","Somalia","South Sudan",
+          "Uganda","United Republic of Tanzania","Zambia","Zimbabwe",
+          "Middle Africa","Angola","Cameroon","Central African Republic","Chad",
+          "Congo","Democratic Republic of the Congo","Equatorial Guinea","Gabon",
+          "Sao Tome and Principe","Southern Africa","Botswana","Eswatini","Lesotho",
+          "Namibia","South Africa","Western Africa","Benin","Burkina Faso",
+          "Cabo Verde","Côte d'Ivoire","Gambia","Ghana","Guinea","Guinea-Bissau",
+          "Liberia","Mali","Mauritania","Niger","Nigeria","Senegal","Sierra Leone",
+          "Togo","NORTHERN AFRICA AND WESTERN ASIA","Northern Africa","Algeria",
+          "Egypt","Libya","Morocco","Sudan","Tunisia","Western Sahara",
+          "Western Asia","Armenia","Azerbaijan","Bahrain","Cyprus","Georgia","Iraq",
+          "Israel","Jordan","Kuwait","Lebanon","Oman","Qatar","Saudi Arabia",
+          "State of Palestine","Syrian Arab Republic","Turkey",
+          "United Arab Emirates","Yemen","CENTRAL AND SOUTHERN ASIA","Central Asia",
+          "Kazakhstan","Kyrgyzstan","Tajikistan","Turkmenistan","Uzbekistan",
+          "Southern Asia","Afghanistan","Bangladesh","Bhutan","India",
+          "Iran (Islamic Republic of)","Maldives","Nepal","Pakistan","Sri Lanka",
+          "EASTERN AND SOUTH-EASTERN ASIA","Eastern Asia","China",
+          "China, Hong Kong SAR","China, Macao SAR",
+          "China, Taiwan Province of China","Dem. People's Republic of Korea",
+          "Japan","Mongolia","Republic of Korea","South-Eastern Asia",
+          "Brunei Darussalam","Cambodia","Indonesia",
+          "Lao People's Democratic Republic","Malaysia","Myanmar","Philippines",
+          "Singapore","Thailand","Timor-Leste","Viet Nam",
+          "LATIN AMERICA AND THE CARIBBEAN","Caribbean","Antigua and Barbuda",
+          "Aruba","Bahamas","Barbados","Cuba","Curaçao","Dominican Republic",
+          "Grenada","Guadeloupe","Haiti","Jamaica","Martinique","Puerto Rico",
+          "Saint Lucia","Saint Vincent and the Grenadines","Trinidad and Tobago",
+          "United States Virgin Islands","Central America","Belize","Costa Rica",
+          "El Salvador","Guatemala","Honduras","Mexico","Nicaragua","Panama",
+          "South America","Argentina","Bolivia (Plurinational State of)","Brazil",
+          "Chile","Colombia","Ecuador","French Guiana","Guyana","Paraguay","Peru",
+          "Suriname","Uruguay","Venezuela (Bolivarian Republic of)",
+          "AUSTRALIA/NEW ZEALAND","Australia","New Zealand",
+          "OCEANIA (EXCLUDING AUSTRALIA AND NEW ZEALAND)","Melanesia","Fiji",
+          "New Caledonia","Papua New Guinea","Solomon Islands","Vanuatu",
+          "Micronesia","Guam","Kiribati","Micronesia (Fed. States of)","Polynesia",
+          "French Polynesia","Samoa","Tonga","EUROPE AND NORTHERN AMERICA","EUROPE",
+          "Eastern Europe","Belarus","Bulgaria","Czechia","Hungary","Poland",
+          "Republic of Moldova","Romania","Russian Federation","Slovakia","Ukraine",
+          "Northern Europe","Channel Islands","Denmark","Estonia","Finland",
+          "Iceland","Ireland","Latvia","Lithuania","Norway","Sweden",
+          "United Kingdom","Southern Europe","Albania","Bosnia and Herzegovina",
+          "Croatia","Greece","Italy","Malta","Montenegro","North Macedonia",
+          "Portugal","Serbia","Slovenia","Spain","Western Europe","Austria",
+          "Belgium","France","Germany","Luxembourg","Netherlands","Switzerland",
+          "NORTHERN AMERICA","Canada","United States of America"];
+          
+          for(var i = 0; i < options.length; i++) {
+            var opt = options[i];
+            var el = document.createElement("option");
+            el.textContent = opt;
+            el.value = opt;
+            select.appendChild(el);
+          }
+        </script>
+      </div>
+
+    </div>
+    
+  </div>
 
 </body>
 </html>
