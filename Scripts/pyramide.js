@@ -225,7 +225,6 @@ function changeData(){
     });
 }
 
-
 /*
     Sending data functions. 
 */
@@ -238,6 +237,9 @@ function sendDataToAbout(){
 }
 
 function go_to_world_page(countries="Belgium", year="1970"){
+  year = d3.select("#slider_year").attr("value");
+  countries = $('#sLand').find(":selected").text();
+  
   let link = '../Pages/worldmap_population.html?countries=' + countries + '&year=' + year;
   window.location.href = link;
 }
