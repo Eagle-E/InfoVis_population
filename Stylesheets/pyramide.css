@@ -1,7 +1,39 @@
-#pyramide {
-    width: 1000px;
-    height: 500px;
-} 
-.bar {
-    fill: steelblue;
+svg {
+    border: 1px solid rgb(0, 0, 0);
 }
+.axis line,
+.axis path {
+    shape-rendering: crispEdges;
+    fill: transparent;
+    stroke: #555;
+}
+.axis text {
+    font-size: 13px;
+}
+.bar {
+    fill-opacity: 0.9;
+}
+.toolTip {
+    position: absolute;
+    display: none;
+    min-width: 80px;
+    height: auto;
+    background: none repeat scroll 0 0 #ffffff;
+    border: 1px solid #6F257F;
+    padding: 14px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 2px 5px #888888;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-child {
+    flex: 1;
+}  
+
+.flex-child:first-child {
+    margin-right: 5px;
+} 
