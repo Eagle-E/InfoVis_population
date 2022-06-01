@@ -102,6 +102,10 @@
                   options = getCountriesArray();
                 }else{
                   options = lands.split(",");
+                  //concat(options, getCountriesArray())
+                  var tmp = getCountriesArray();
+                  tmp = [].concat(' ', tmp)
+                  options = [].concat(options, tmp);
                 }      
   
                 for(var i = 0; i < options.length; i++) {
