@@ -16,31 +16,16 @@
     <script src="https://d3js.org/topojson.v1.min.js"></script>
     <script src="../Scripts/Legend.js"></script>
     <script src="../Scripts/rangeslider.js"></script>
-
-    <script lang="javascript">
-      function sendDataToAbout(){
-        //Change value year and land to value that has to be send to pyramide page. :)
-        //Change value year and land to value that has to be send to pyramide page. :)
-        //Change value year and land to value that has to be send to pyramide page. :)
-        //Change value year and land to value that has to be send to pyramide page. :)
-        //Change value year and land to value that has to be send to pyramide page. :)
-        var year = "1970"
-        const lands = ["Germany","Luxembourg","Netherlands","Switzerland","Canada","United States of America"];
-
-        var href="../Pages/pyramid.html"
-        window.location.href = href+"?year=" + year+"&"+"lands="+lands;
-      }
-    </script>
 </head> 
 
 <body>
     <div id="ui_wrapper">        
         
         <div class="topnav">
-            <a class="active" href="../Pages/worldmap_population.html">Worldmap</a>
-            <a onclick="sendDataToAbout();">Population Pyramide</a>
+            <a class="active" href="./worldmap_population.html">Worldmap</a>
+            <a onclick="go_to_pyramid_page()">Population Pyramide</a>
             <a href="#p3">R-page</a>
-            <a href="#aboutPage">About</a>
+            <a href="./about.html">About</a>
         </div>
 
         <div id="worldmap_wrapper">
@@ -64,265 +49,265 @@
     
 
     <script>        
-        // Get worldmap svg size
-        var svg = d3.select("svg#worldmap");
-        var svgWrapper = d3.select('#worldmap_wrapper');
-        var svgBounds = svg.node().getBoundingClientRect();
-        var width = svgBounds.width;
-        var height = svgBounds.height;
-        console.log(`worldmap svg: (w, h) = (${svgBounds.width}, ${svgBounds.height})`);
-        var countryClicked = false;
+    // Get worldmap svg size
+    var svg = d3.select("svg#worldmap");
+    var svgWrapper = d3.select('#worldmap_wrapper');
+    var svgBounds = svg.node().getBoundingClientRect();
+    var width = svgBounds.width;
+    var height = svgBounds.height;
+    console.log(`worldmap svg: (w, h) = (${svgBounds.width}, ${svgBounds.height})`);
+    var countryClicked = false;
 
-        // The projection object for rescaling data to the size of the ui
-        var path = d3.geoPath();
-        var projection = d3.geoMercator()
-          .scale(150)
-          .center([50,-20])
-          .translate([width / 2, height / 2]);
+    // The projection object for rescaling data to the size of the ui
+    var path = d3.geoPath();
+    var projection = d3.geoMercator()
+        .scale(150)
+        .center([50,-20])
+        .translate([width / 2, height / 2]);
 
-        /*
-        Color scheme of the countries based on population
-                   GREEN            |          BLUE             |            RED
-        500k  1mil  2.5mil  5mil  10mil  25mil  50mil  75mil  100mil 325mil 550mil 775mil 1000mil
-        */
-        colorRanges = [
-            500000, 1000000, 2500000, 5000000, 10000000,    // GREEN 
-            25000000, 50000000, 75000000, 100000000,        // BLUE
-            325000000, 550000000, 775000000, 1000000000     // RED
-        ];
+    /*
+    Color scheme of the countries based on population
+                GREEN            |          BLUE             |            RED
+    500k  1mil  2.5mil  5mil  10mil  25mil  50mil  75mil  100mil 325mil 550mil 775mil 1000mil
+    */
+    colorRanges = [
+        500000, 1000000, 2500000, 5000000, 10000000,    // GREEN 
+        25000000, 50000000, 75000000, 100000000,        // BLUE
+        325000000, 550000000, 775000000, 1000000000     // RED
+    ];
 
-        // The final colors are a slightly modified version of the generated colors in the next line 
-        // colors = d3.schemeGreens[5].concat(d3.schemeBlues[4]).concat(d3.schemeReds[5]);
-        colorsG = ['#a0d69b', '#74c476', '#41ab5d', '#238b45', '#005a32'];
-        colorsB = ['#bdd7e7', '#6baed6', '#3182bd', '#08519c'];
-        colorsR = ['#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#99000d']
-        colors = [...colorsG, ...colorsB, ...colorsR];
-        var colorScale = d3.scaleThreshold()
-          .domain(colorRanges)
-          .range(colors);
-        
-        // var colorScale = d3.scaleThreshold()
-        //   .domain(colorRanges)
-        //   .range(d3.schemeBlues[colorRanges.lenght + 1]);
+    // The final colors are a slightly modified version of the generated colors in the next line 
+    // colors = d3.schemeGreens[5].concat(d3.schemeBlues[4]).concat(d3.schemeReds[5]);
+    colorsG = ['#a0d69b', '#74c476', '#41ab5d', '#238b45', '#005a32'];
+    colorsB = ['#bdd7e7', '#6baed6', '#3182bd', '#08519c'];
+    colorsR = ['#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#99000d']
+    colors = [...colorsG, ...colorsB, ...colorsR];
+    var colorScale = d3.scaleThreshold()
+        .domain(colorRanges)
+        .range(colors);
+    
+    // var colorScale = d3.scaleThreshold()
+    //   .domain(colorRanges)
+    //   .range(d3.schemeBlues[colorRanges.lenght + 1]);
 
 
-        // get the population data
-        let populationData = null;
+    // get the population data
+    let populationData = null;
 
-        fetch("http://localhost:8000/data/population.json")
-        .then(response => response.json())
-        .then(json => {
-            populationData = json;
-            d3.queue()
-              .defer(d3.json, "http://localhost:8000/data/world.geojson")
-              .await(ready);
-        })
+    fetch("http://localhost:8000/data/population.json")
+    .then(response => response.json())
+    .then(json => {
+        populationData = json;
+        d3.queue()
+            .defer(d3.json, "http://localhost:8000/data/world.geojson")
+            .await(ready);
+    })
 
-        function ready(error, topo) 
-        {
-            let mouseOverCountry = function(data, index) {
-                // FOCUS
-                {
-                    d3.selectAll(".Country")
-                    .transition()
-                    .duration(200)
-                    .style("opacity", .5)
-                    .style("stroke", "#979797");
-                    
-                    d3.select(this)
-                    .transition()
-                    .duration(200)
-                    .style("opacity", 1)  
-                    .style("stroke", "black");
-                }
-
-                // TITLE
-                {
-                    let countryName = data.properties.name;
-                    title = d3.select("#worldmap_title_txt");
-                    title.html(countryName);
-                    var titleBounds = title.node().getBoundingClientRect();
-                    var tw = titleBounds.width;
-                    var th = titleBounds.height;
-                    var windowBounds = d3.select("body").node().getBoundingClientRect();
-                    var ww = windowBounds.width;
-                    var wh = windowBounds.height;
-
-                    title.attr("x", ww/2 - tw/2);
-                }
-
-            }
-        
-            let mouseLeaveCountry = function(data, index) {
-                // UNFOCUS
-                {
-                    d3.selectAll(".Country")
-                    .transition()
-                    .duration(200)
-                    .style("opacity", 1)
-                    .style("stroke", "#979797")
-                    
-                    d3.select(this)
-                    .transition()
-                    .duration(200)
-                    // .style("opacity", .8)
-                    .style("stroke", "#979797")
-                }
-
-                // TOOLTIP
-                {
-                    
-                    
-                }
-
-                // TITLE
-                {
-                    d3.select("#worldmap_title_txt").html("");
-                }
-
-            }
-
-            let mouseClickCountry = function(data, index){
-                countryClicked = true;
+    function ready(error, topo) 
+    {
+        let mouseOverCountry = function(data, index) {
+            // FOCUS
+            {
+                d3.selectAll(".Country")
+                .transition()
+                .duration(200)
+                .style("opacity", .5)
+                .style("stroke", "#979797");
                 
-                // TOOLTIP
-                {
-                    
-                    // remove previous tooltips
-                    d3.selectAll(".tooltip").remove();
+                d3.select(this)
+                .transition()
+                .duration(200)
+                .style("opacity", 1)  
+                .style("stroke", "black");
+            }
 
-                    // create the new tooltip
-                    let countryName = data.properties.name;
-                    let year = d3.select("#slider_year").attr("value");
+            // TITLE
+            {
+                let countryName = data.properties.name;
+                title = d3.select("#worldmap_title_txt");
+                title.html(countryName);
+                var titleBounds = title.node().getBoundingClientRect();
+                var tw = titleBounds.width;
+                var th = titleBounds.height;
+                var windowBounds = d3.select("body").node().getBoundingClientRect();
+                var ww = windowBounds.width;
+                var wh = windowBounds.height;
 
-                    // add a new tooltip
-                    var tooltip = d3.select("body")
-                                    .append("div")
-                                    .attr("class", "tooltip " + ("tooltip-" + countryName).replaceAll(' ', '-'))
-                                    .style("display", "grid")
-                                    .style("grid-template-columns", "1fr max-content");
+                title.attr("x", ww/2 - tw/2);
+            }
 
-                    tooltip.style("left", d3.event.pageX + 70 + "px")
-                            .style("top", d3.event.pageY  + "px")
-                            .append("h1")
-                            .html(countryName)
-                            .attr("class", "tooltipTitle")
-                            .style("grid-column", "span 2");
+        }
+    
+        let mouseLeaveCountry = function(data, index) {
+            // UNFOCUS
+            {
+                d3.selectAll(".Country")
+                .transition()
+                .duration(200)
+                .style("opacity", 1)
+                .style("stroke", "#979797")
+                
+                d3.select(this)
+                .transition()
+                .duration(200)
+                // .style("opacity", .8)
+                .style("stroke", "#979797")
+            }
 
-                    tooltip.append("input")
-                            .attr("type", "button")
-                            .attr("value", "compare age groups")
-                            .on("click", to_pyramid_page)
-                            .attr("class", "tooltipBtn button col2 row2");
-
-                    tooltip.append("h2")
-                            .html("Population (" + year + ")")
-                            .attr("class", "tooltipSubTitle col1");
-
-                    tooltip.append("p")
-                            .html("Male: " + prettify(populationData[countryName][year]["totalMen"]*1000))
-                            .attr("class", "tooltipText col1");
-                    tooltip.append("p")
-                            .html("Female: " + prettify(populationData[countryName][year]["totalWomen"]*1000))
-                            .attr("class", "tooltipText col1");
-                    tooltip.append("p")
-                            .html("Total: " + prettify(populationData[countryName][year]["total"]*1000))
-                            .attr("class", "tooltipText col1");
-                }
-
+            // TOOLTIP
+            {
+                
                 
             }
-        
-            let mouseClickOcean = function(data, index){
-                if (countryClicked)
-                {
-                    countryClicked = false;
-                    return;
-                }
+
+            // TITLE
+            {
+                d3.select("#worldmap_title_txt").html("");
+            }
+
+        }
+
+        let mouseClickCountry = function(data, index){
+            countryClicked = true;
+            
+            // TOOLTIP
+            {
                 
                 // remove previous tooltips
                 d3.selectAll(".tooltip").remove();
+
+                // create the new tooltip
+                let countryName = data.properties.name;
+                let year = d3.select("#slider_year").attr("value");
+
+                // add a new tooltip
+                var tooltip = d3.select("body")
+                                .append("div")
+                                .attr("class", "tooltip " + ("tooltip-" + countryName).replaceAll(' ', '-'))
+                                .style("display", "grid")
+                                .style("grid-template-columns", "1fr max-content");
+
+                tooltip.style("left", d3.event.pageX + 70 + "px")
+                        .style("top", d3.event.pageY  + "px")
+                        .append("h1")
+                        .html(countryName)
+                        .attr("class", "tooltipTitle")
+                        .style("grid-column", "span 2");
+
+                tooltip.append("input")
+                        .attr("type", "button")
+                        .attr("value", "compare age groups")
+                        .on("click", function(){go_to_pyramid_page([countryName], year)})
+                        .attr("class", "tooltipBtn button col2 row2");
+
+                tooltip.append("h2")
+                        .html("Population (" + year + ")")
+                        .attr("class", "tooltipSubTitle col1");
+
+                tooltip.append("p")
+                        .html("Male: " + prettify(populationData[countryName][year]["totalMen"]*1000))
+                        .attr("class", "tooltipText col1");
+                tooltip.append("p")
+                        .html("Female: " + prettify(populationData[countryName][year]["totalWomen"]*1000))
+                        .attr("class", "tooltipText col1");
+                tooltip.append("p")
+                        .html("Total: " + prettify(populationData[countryName][year]["total"]*1000))
+                        .attr("class", "tooltipText col1");
             }
-
-            // init the slider
-            ionRangeSlider('#slider_year', {
-                min: 1950,
-                max: 2020,
-                step: 5,
-                from: 2020,
-                prefix: "year ",
-                grid: true,
-                grid_num: 14,
-                prettify_enabled: false,
-                onChange: function(val){
-                    year = d3.select("#slider_year").attr("value");
-                    svg.selectAll("path")
-                        .attr("fill", function(data, index){
-                            let countryName = data.properties.name;
-                            if (countryName in populationData)
-                            {
-                                let population = populationData[countryName][year]["total"] * 1000
-                                return colorScale(population || 0);
-                            }
-                        })
-                }
-            });            
-
-            // Draw the map
-            svg.on("click", mouseClickOcean)
-            svg.append("g")
-                .attr('id', 'countriesGroup')
-                .selectAll("path")
-                .data(topo.features)
-                .enter()
-                .append("path") 
-                // draw each country
-                .attr("d", d3.geoPath().projection(projection))
-                // set the color of each country
-                .attr("fill", function (feature) {
-                    let countryName = feature.properties.name;
-                    if (countryName in populationData)
-                    {
-                        let year = parseInt(d3.select("#slider_year").attr("value"));
-                        let population = populationData[countryName][year]["total"] * 1000
-                        return colorScale(population || 0);
-                    }
-                    else{
-                        console.log(countryName)
-                    }
-                })
-                .style("stroke", "#979797")
-                .style("stroke-width", "0.5px")
-                .attr("class", function(d){ return "Country" } )
-                .style("opacity", .8)
-                .on("mouseover", mouseOverCountry )
-                .on("mouseleave", mouseLeaveCountry )
-                .on("click", mouseClickCountry)
-           
-            // zoom and pan
-            svg.call(d3.zoom()
-                .on("zoom", function () {
-                        svg.selectAll('g#countriesGroup').attr("transform", d3.event.transform)
-                    }
-                ));
-
-            // add legend
-            legend = Legend(colorScale, {title: "", tickFormat: "", tickSize: 10});
-
-            d3.select('#worldmap_footer')
-                .append(() => legend)
-                .lower()
-                .attr('id', 'legend');
 
             
         }
+    
+        let mouseClickOcean = function(data, index){
+            if (countryClicked)
+            {
+                countryClicked = false;
+                return;
+            }
+            
+            // remove previous tooltips
+            d3.selectAll(".tooltip").remove();
+        }
+
+        // init the slider
+        ionRangeSlider('#slider_year', {
+            min: 1950,
+            max: 2020,
+            step: 5,
+            from: 2020,
+            prefix: "year ",
+            grid: true,
+            grid_num: 14,
+            prettify_enabled: false,
+            onChange: function(val){
+                year = d3.select("#slider_year").attr("value");
+                svg.selectAll("path")
+                    .attr("fill", function(data, index){
+                        let countryName = data.properties.name;
+                        if (countryName in populationData)
+                        {
+                            let population = populationData[countryName][year]["total"] * 1000
+                            return colorScale(population || 0);
+                        }
+                    })
+            }
+        });            
+
+        // Draw the map
+        svg.on("click", mouseClickOcean)
+        svg.append("g")
+            .attr('id', 'countriesGroup')
+            .selectAll("path")
+            .data(topo.features)
+            .enter()
+            .append("path") 
+            // draw each country
+            .attr("d", d3.geoPath().projection(projection))
+            // set the color of each country
+            .attr("fill", function (feature) {
+                let countryName = feature.properties.name;
+                if (countryName in populationData)
+                {
+                    let year = parseInt(d3.select("#slider_year").attr("value"));
+                    let population = populationData[countryName][year]["total"] * 1000
+                    return colorScale(population || 0);
+                }
+                else{
+                    console.log(countryName)
+                }
+            })
+            .style("stroke", "#979797")
+            .style("stroke-width", "0.5px")
+            .attr("class", function(d){ return "Country" } )
+            .style("opacity", .8)
+            .on("mouseover", mouseOverCountry )
+            .on("mouseleave", mouseLeaveCountry )
+            .on("click", mouseClickCountry)
+        
+        // zoom and pan
+        svg.call(d3.zoom()
+            .on("zoom", function () {
+                    svg.selectAll('g#countriesGroup').attr("transform", d3.event.transform)
+                }
+            ));
+
+        // add legend
+        legend = Legend(colorScale, {title: "", tickFormat: "", tickSize: 10});
+
+        d3.select('#worldmap_footer')
+            .append(() => legend)
+            .lower()
+            .attr('id', 'legend');
+
+        
+    }
 
 
 
 
-    function to_pyramid_page()
-    {
-        sendDataToAbout()
+    function go_to_pyramid_page(countries, year){
+        let link = './pyramid.html?countries=' + countries + '&year=' + year;
+        window.location.href = link;
     }
 
     const prettify = function (num) {
