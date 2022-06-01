@@ -1,11 +1,16 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="../Stylesheets/reset.css">
+    <link rel="stylesheet" href="../Stylesheets/base.css">
+    <link rel="stylesheet" href="../Stylesheets/nav.css">
+    <link rel="stylesheet" href="../Stylesheets/rangeslider.css">
+    <link rel="stylesheet" href="../Stylesheets/pyramide.css">
+    
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="../Scripts/jquery.csv.js"></script>
-    <link rel="stylesheet" href="../Stylesheets/nav.css">
     <script src="../Scripts/rangeslider.js"></script>
-    <link rel="stylesheet" href="../Stylesheets/rangeslider.css">
 
     <style>
         svg {
@@ -276,7 +281,7 @@
         var href="../Pages/about.html"
         var id = "007"
         const options = ["Belgium","France","Germany","Luxembourg","Netherlands","Switzerland","Canada","United States of America"];
-        window.location.href = "../Pages/about.html?filename=" + id+"&"+"lands="+options;
+        window.location.href = "../Pages/about.html?filename=" + id+"&"+"countries="+options;
       }
     </script>
 </head>
@@ -291,7 +296,7 @@
     <a onclick="sendDataToAbout();">About</a>
   </div>
 
-  <h1> Population pyramide</h1>
+  <!-- <h1> Population pyramide</h1> -->
 
   <div id="div_slider">
     <input type="text" id="slider_year" name="year" value="" />
@@ -332,7 +337,7 @@
 
               var url_string = window.location.href;
               var url = new URL(url_string);
-              var param = url.searchParams.get("lands");
+              var param = url.searchParams.get("countries");
 
               const options = param.split(",");
               console.log(options)              
