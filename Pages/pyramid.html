@@ -41,6 +41,10 @@
             empty = true;
             console.log(year)
           }
+
+          if(year == "undefined"){
+            empty = true;
+          }
           
           if(empty){
             y = 2020;
@@ -97,6 +101,11 @@
                 if(lands == null){
                   empty = true
                 }
+
+                if(lands == "undefined"){
+                  empty = true;
+                }
+          
   
                 if(empty){
                   options = getCountriesArray();
