@@ -37,7 +37,7 @@
           var year = url.searchParams.get("year");
   
           var empty = false
-          if(year == null || (1950 <= year <= 2020) ){
+          if(year == null || !(1950 <= year <= 2020) ){
             empty = true;
             console.log(year)
           }
@@ -104,7 +104,7 @@
                   options = lands.split(",");
                   //concat(options, getCountriesArray())
                   var tmp = getCountriesArray();
-                  tmp = [].concat(' ', tmp)
+                  tmp = [].concat('', tmp)
                   options = [].concat(options, tmp);
                 }      
   
