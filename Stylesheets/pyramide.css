@@ -1,13 +1,75 @@
-#pyramide {
-    width: 1000px;
-    height: 500px;
-} 
-
+svg {
+    border: 1px solid rgb(0, 0, 0);
+}
+.axis line,
+.axis path {
+    shape-rendering: crispEdges;
+    fill: transparent;
+    stroke: #555;
+}
+.axis text {
+    font-size: 13px;
+}
 .bar {
-    fill: steelblue;
+    fill-opacity: 0.9;
+}
+.toolTip {
+    position: absolute;
+    display: none;
+    min-width: 80px;
+    height: auto;
+    background: none repeat scroll 0 0 #ffffff;
+    border: 1px solid #6F257F;
+    padding: 14px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 2px 5px #888888;
 }
 
+.flex-container {
+    display: flex;
+}
+
+.flex-child {
+    flex: 1;
+}  
+
+.flex-child:first-child {
+    margin-right: 5px;
+} 
+
+/* slider style modification */
+.irs--flat .irs-handle > i:first-child {
+    width: 18px;
+    border-radius: 10px;
+    left: 0;
+}
+
+.irs--flat .irs-bar{
+    background-color: transparent;
+}
+
+.slider_year{
+    min-width: 600px;
+    max-width: 600px;
+}
 
 #div_slider{
-    margin: 24px;
+    min-width: 98%;
+    max-width: 98%;
+}
+
+.topnav{
+    min-width: 100%;
+    max-width: 100%;
+}
+
+body{
+    margin:0;
+}
+
+.content_div{
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
 }
