@@ -22,7 +22,7 @@
         var href="../Pages/about.html"
         var id = "007"
         const options = ["Belgium","France","Germany","Luxembourg","Netherlands","Switzerland","Canada","United States of America"];
-        window.location.href = "../Pages/pyramid.html?filename=" + id+"&"+"lands="+options;
+        window.location.href = "localhost:8000/Pages/pyramid.html?filename=" + id+"&"+"lands="+options;
       }
     </script>
 </head> 
@@ -181,6 +181,7 @@
                 
                 // TOOLTIP
                 {
+                    
                     // remove previous tooltips
                     d3.selectAll(".tooltip").remove();
 
@@ -213,13 +214,13 @@
                             .attr("class", "tooltipSubTitle col1");
 
                     tooltip.append("p")
-                            .html("Male: " + populationData[countryName][year]["totalMen"])
+                            .html("Male: " + prettify(populationData[countryName][year]["totalMen"]*1000))
                             .attr("class", "tooltipText col1");
                     tooltip.append("p")
-                            .html("Femal: " + populationData[countryName][year]["totalWomen"])
+                            .html("Female: " + prettify(populationData[countryName][year]["totalWomen"]*1000))
                             .attr("class", "tooltipText col1");
                     tooltip.append("p")
-                            .html("Total: " + populationData[countryName][year]["total"])
+                            .html("Total: " + prettify(populationData[countryName][year]["total"]*1000))
                             .attr("class", "tooltipText col1");
                 }
 
@@ -315,12 +316,14 @@
 
     function to_pyramid_page()
     {
-        alert("lesgooooo")
+        sendDataToAbout()
     }
 
+    const prettify = function (num) {
+        return num.toString().replace(/(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, "$1" + ' ');
+    };
     </script>
     
-
 
 
 

@@ -195,3 +195,16 @@ tooltip:nth-child(3) {
 .button:hover {
     background-color: #2787fc;
 }
+
+
+
+/* slider style modification */
+.irs--flat .irs-handle > i:first-child {
+    width: 18px;
+    border-radius: 10px;
+    left: 0;
+}
+
+.irs--flat .irs-bar{
+    background-color: transparent;
+}
