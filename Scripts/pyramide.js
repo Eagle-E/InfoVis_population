@@ -237,6 +237,11 @@ function sendDataToAbout(){
     window.location.href = href+"?filename="+id+"&"+"lands="+options;
 }
 
+function go_to_world_page(countries="Belgium", year="1970"){
+  let link = '../Pages/worldmap_population.html?countries=' + countries + '&year=' + year;
+  window.location.href = link;
+}
+
 
 /*
     translate rewriting was annoying in d3js
