@@ -49,11 +49,6 @@ svg {
     background-color: transparent;
 }
 
-.slider_year{
-    min-width: 600px;
-    max-width: 600px;
-}
-
 #div_slider{
     min-width: 98%;
     max-width: 98%;
