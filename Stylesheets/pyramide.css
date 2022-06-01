@@ -37,3 +37,14 @@ svg {
 .flex-child:first-child {
     margin-right: 5px;
 } 
+
+/* slider style modification */
+.irs--flat .irs-handle > i:first-child {
+    width: 18px;
+    border-radius: 10px;
+    left: 0;
+}
+
+.irs--flat .irs-bar{
+    background-color: transparent;
+}
