@@ -332,10 +332,24 @@
 
               var url_string = window.location.href;
               var url = new URL(url_string);
-              var param = url.searchParams.get("lands");
 
-              const options = param.split(",");
-              console.log(options)              
+              var param = url.searchParams.get("lands");
+              
+              var empty = false
+              var options = []
+
+              if(param == null){
+                empty = true
+              }
+
+
+
+
+              if(empty){
+                options = ["Belgium","France","Germany","Luxembourg","Netherlands","Switzerland","Canada","United States of America"];
+              }else{
+                options = param.split(",");
+              }      
 
               for(var i = 0; i < options.length; i++) {
                 var opt = options[i];
