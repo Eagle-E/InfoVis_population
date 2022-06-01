@@ -216,6 +216,9 @@ function changeData(){
       v = el.options[0].innerHTML;
     }
 
+    var ele = document.getElementById('land_title');
+    ele.innerHTML = v;
+    
     var loc = "../data/popCountries/"+v+"_"+v2+".csv";
     d3.csv(loc, function(data) {
       draw_pyramide(data);

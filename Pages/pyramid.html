@@ -1,9 +1,11 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="../Stylesheets/nav.css">
     <link rel="stylesheet" href="../Stylesheets/rangeslider.css">
     <link rel="stylesheet" href="../Stylesheets/pyramide.css" >
+    <link rel="stylesheet" href="../Stylesheets/base.css">
 
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="../Scripts/jquery.csv.js"></script>
@@ -22,95 +24,99 @@
     <a onclick="sendDataToAbout();">About</a>
   </div>
 
-  <div id="div_slider">
-    <input type="text" id="slider_year" name="year" value="" />
-
-    <script lang="javascript">
-        var y = 2020;
-
-        var url_string = window.location.href;
-        var url = new URL(url_string);
-
-        var year = url.searchParams.get("year");
-
-        var empty = false
-        if(year == null || (1950 <= year <= 2020) ){
-          empty = true;
-          console.log(year)
-        }
-        
-        if(empty){
-          y = 2020;
-        }else{
-          y = parseInt(year);
-        } 
-
-
-        ionRangeSlider('#slider_year', {
-          min: 1950,
-          max: 2020,
-          step: 5,
-          from: y,
-          prefix: "year ",
-          grid: true,
-          grid_num: 14,
-          prettify_enabled: false,
-        });
-
-        var slide = document.getElementById('slider_year');
-        slide.onchange = function() {
-            changeData();
-        }
-    </script>
-  </div>
-
-  <div class="flex-container">
-        <div class="flex-child magenta">
-          <div id="pyramide"></div>
-        </div>
-
-        <div class="flex-child green">
+  <div class="content_div">
+    <div id="div_slider">
+      <input type="text" id="slider_year" name="year" value="" />
+  
+      <script lang="javascript">
+          var y = 2020;
+  
+          var url_string = window.location.href;
+          var url = new URL(url_string);
+  
+          var year = url.searchParams.get("year");
+  
+          var empty = false
+          if(year == null || (1950 <= year <= 2020) ){
+            empty = true;
+            console.log(year)
+          }
           
-          <div id="div_land">
-            <label for="sLand"> <b>Choose a Country:</b></label>
-            <br>
-            
-            <select id="sLand" onchange="changeData();" size="20" value="">
-            </select>
-        
-            <script lang="javascript">
-              var select = document.getElementById("sLand");
-
-              var url_string = window.location.href;
-              var url = new URL(url_string);
-
-              var lands = url.searchParams.get("lands");
-              
-              var empty = false
-              var options = []
-
-              if(lands == null){
-                empty = true
-              }
-
-              if(empty){
-                options = getCountriesArray();
-              }else{
-                options = lands.split(",");
-              }      
-
-              for(var i = 0; i < options.length; i++) {
-                var opt = options[i];
-                var el = document.createElement("option");
-                el.textContent = opt;
-                el.value = opt;
-                select.appendChild(el);
-              }
-            </script>
+          if(empty){
+            y = 2020;
+          }else{
+            y = parseInt(year);
+          } 
+  
+  
+          ionRangeSlider('#slider_year', {
+            min: 1950,
+            max: 2020,
+            step: 5,
+            from: y,
+            prefix: "year ",
+            grid: true,
+            grid_num: 14,
+            prettify_enabled: false,
+          });
+  
+          var slide = document.getElementById('slider_year');
+          slide.onchange = function() {
+              changeData();
+          }
+      </script>
+    </div>
+    
+    <h1 id="land_title"> TEST </h1>
+  
+    <div class="flex-container">
+          <div class="flex-child magenta">
+            <div id="pyramide"></div>
           </div>
+  
+          <div class="flex-child green">
+            
+            <div id="div_land">
+              <label for="sLand"> <b>Choose a Country:</b></label>
+              <br>
+              
+              <select id="sLand" onchange="changeData();" size="20" value="">
+              </select>
+          
+              <script lang="javascript">
+                var select = document.getElementById("sLand");
+  
+                var url_string = window.location.href;
+                var url = new URL(url_string);
+  
+                var lands = url.searchParams.get("lands");
+                
+                var empty = false
+                var options = []
+  
+                if(lands == null){
+                  empty = true
+                }
+  
+                if(empty){
+                  options = getCountriesArray();
+                }else{
+                  options = lands.split(",");
+                }      
+  
+                for(var i = 0; i < options.length; i++) {
+                  var opt = options[i];
+                  var el = document.createElement("option");
+                  el.textContent = opt;
+                  el.value = opt;
+                  select.appendChild(el);
+                }
+              </script>
+            </div>
+  
+          </div> 
+    </div>
 
-        </div> 
   </div>
-
 </body>
 </html>
