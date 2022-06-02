@@ -259,69 +259,73 @@
             return svgLine;
         }
 
+        let addTooltip = function(country, x, y)
+        {
+            // remove previous tooltips
+            d3.selectAll(".tooltip").remove();
+
+            // create the new tooltip
+            let countryName = country;
+            let year = d3.select("#slider_year").attr("value");
+
+            // add a new tooltip
+            var tooltip = d3.select("body")
+                            .append("div")
+                            .attr("class", "tooltip " + ("tooltip-" + countryName).replaceAll(' ', '-'))
+                            .style("display", "grid")
+                            .style("grid-template-columns", "1fr max-content");
+
+            // title and button
+            tooltip.style("left", x + "px")
+                    .style("top", y + "px")
+                    .append("h1")
+                    .html(countryName)
+                    .attr("class", "tooltipTitle")
+                    .style("grid-column", "span 2");
+
+            tooltip.append("input")
+                    .attr("type", "button")
+                    .attr("value", "compare age groups")
+                    .on("click", function(){go_to_pyramid_page([countryName], year)})
+                    .attr("class", "tooltipBtn button col2 row2");
+
+            // subtitle
+            tooltip.append("h2")
+                    .html("Population in thousands")
+                    .attr("class", "tooltipSubTitle col1");
+                    
+            // simple population line chart
+            let lineChartHeight = 200;
+            let lineChartWidth = tooltip.node().getBoundingClientRect().width;
+            let lineChart = create_simple_population_linechart(countryName, year, lineChartHeight, lineChartWidth);
+            tooltip.append(() => lineChart.node())
+                    .style('grid-column', 'span 2');
+                    
+            // male female and total population of current year
+            tooltip.append("p")
+                    .html("Male: " + prettify(populationData[countryName][year]["totalMen"]*1000))
+                    .attr("class", "tooltipText col1")
+                    .style('color', 'blue');
+            tooltip.append("p")
+                    .html("Female: " + prettify(populationData[countryName][year]["totalWomen"]*1000))
+                    .attr("class", "tooltipText col1")
+                    .style('color', 'rgb(246, 51, 213)');
+            tooltip.append("p")
+                    .html("Total: " + prettify(populationData[countryName][year]["total"]*1000))
+                    .attr("class", "tooltipText col1");
+
+            // TODO: Average age
+            // TODO: GDP PPP 
+            // TODO: change with slider
+        }
+
         let mouseClickCountry = function(data, index)
         {
             countryClicked = true;
             
             // TOOLTIP
             {
-                
-                // remove previous tooltips
-                d3.selectAll(".tooltip").remove();
-
-                // create the new tooltip
-                let countryName = data.properties.name;
-                let year = d3.select("#slider_year").attr("value");
-
-                // add a new tooltip
-                var tooltip = d3.select("body")
-                                .append("div")
-                                .attr("class", "tooltip " + ("tooltip-" + countryName).replaceAll(' ', '-'))
-                                .style("display", "grid")
-                                .style("grid-template-columns", "1fr max-content");
-
-                // title and button
-                tooltip.style("left", d3.event.pageX + 70 + "px")
-                        .style("top", d3.event.pageY  + "px")
-                        .append("h1")
-                        .html(countryName)
-                        .attr("class", "tooltipTitle")
-                        .style("grid-column", "span 2");
-
-                tooltip.append("input")
-                        .attr("type", "button")
-                        .attr("value", "compare age groups")
-                        .on("click", function(){go_to_pyramid_page([countryName], year)})
-                        .attr("class", "tooltipBtn button col2 row2");
-
-                // subtitle
-                tooltip.append("h2")
-                        .html("Population in thousands")
-                        .attr("class", "tooltipSubTitle col1");
-                        
-                // simple population line chart
-                let lineChartHeight = 200;
-                let lineChartWidth = tooltip.node().getBoundingClientRect().width;
-                let lineChart = create_simple_population_linechart(countryName, year, lineChartHeight, lineChartWidth);
-                tooltip.append(() => lineChart.node())
-                        .style('grid-column', 'span 2');
-                        
-                // male female and total population of current year
-                tooltip.append("p")
-                        .html("Male: " + prettify(populationData[countryName][year]["totalMen"]*1000))
-                        .attr("class", "tooltipText col1")
-                        .style('color', 'blue');
-                tooltip.append("p")
-                        .html("Female: " + prettify(populationData[countryName][year]["totalWomen"]*1000))
-                        .attr("class", "tooltipText col1")
-                        .style('color', 'rgb(246, 51, 213)');
-                tooltip.append("p")
-                        .html("Total: " + prettify(populationData[countryName][year]["total"]*1000))
-                        .attr("class", "tooltipText col1");
-
-                // TODO: Average age
-                // TODO: GDP PPP 
-                // TODO: change with slider
+                addTooltip(data.properties.name, d3.event.pageX + 70, d3.event.pageY);
 
             }
         }
@@ -347,7 +351,16 @@
                             let population = populationData[countryName][year]["total"] * 1000
                             return colorScale(population || 0);
                         }
-                    })
+                    });
+
+                // update tooltips if there are any
+                d3.selectAll('.tooltip')
+                  .call(function(selection){
+                        var country = selection.select('h1.tooltipTitle').node().innerHTML;
+                        var bounds = selection.node().getBoundingClientRect();
+                        selection.remove();
+                        addTooltip(country, bounds.left, bounds.top);
+                  })
             }
         });            
 
