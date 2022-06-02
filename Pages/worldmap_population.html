@@ -54,7 +54,7 @@
         var getParameters = {}
         getParameters.year = url.searchParams.get("year");
         countriesParam = url.searchParams.get("countries")
-        getParameters.countries = countriesParam === '' ? [] : countriesParam.split(',');
+        getParameters.countries = (countriesParam === '' || countriesParam === null) ? [] : countriesParam.split(',');
         // console.log(getParameters.countries);
         // console.log('year: ' + getParameters.year);
         // console.log('year type: ' + typeof(getParameters.year));
@@ -596,15 +596,41 @@
            })
     }
 
-    
+    function get_selected_countries(){
+        countries = []
+        d3.selectAll('.tooltip')
+            .each(function(data, index){
+                countries.push(d3.select(this).select('.tooltipTitle').node().innerHTML);
+            })
+        return countries;
+    }
 
+    function get_selected_year(){
+        return d3.select("#slider_year").attr("value");
+    }
 
     function go_to_pyramid_page(countries, year){
+        if (countries === undefined){
+            countries = get_selected_countries();
+        }
+
+        if (year === undefined){
+            year = get_selected_year();
+        }
+
         let link = './pyramid.html?countries=' + countries + '&year=' + year;
         window.location.href = link;
     }
 
     function go_to_gdp_page(countries, year){
+        if (countries === undefined){
+            countries = get_selected_countries();
+        }
+
+        if (year === undefined){
+            year = get_selected_year();
+        }
+        
         let link = './gdp-example.html?countries=' + countries + '&year=' + year;
         window.location.href = link;
     }
