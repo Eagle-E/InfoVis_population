@@ -94,6 +94,11 @@
     // get the population data
     let populationData = null;
     let UN_DATA = null;
+    let dragEvent = {
+        mousePos: {x:0, y:0},
+        itemPos: {x:0, y:0},
+        pressed: false
+    }
 
     d3.queue()
             .defer(d3.json, "http://localhost:8000/data/world.geojson")
@@ -395,6 +400,28 @@
                     .html("Life expectancy: " + lifeExpectancy)
                     .attr("class", "tooltipText")// col1");
                     .style('grid-area', 'ageExp')
+
+            // tooltip drag events
+            tooltip.on('mousedown', function(e){
+                dragEvent.mousePos.x = d3.event.clientX;
+                dragEvent.mousePos.y = d3.event.clientY;
+                dragEvent.itemPos.x = tooltip.node().getBoundingClientRect().left;
+                dragEvent.itemPos.y = tooltip.node().getBoundingClientRect().top;
+                dragEvent.pressed = true;
+            })
+            
+            tooltip.on('mouseup', function(){
+                dragEvent.pressed = false;
+            })
+
+            tooltip.on('mousemove', function(){
+                if (dragEvent.pressed === true){
+                    tooltip.node().style.top = dragEvent.itemPos.y + (d3.event.clientY - dragEvent.mousePos.y) + 'px';
+                    tooltip.node().style.left = dragEvent.itemPos.x + (d3.event.clientX - dragEvent.mousePos.x) + 'px';
+                }
+            })
+
+
 
             return tooltip;
         }
