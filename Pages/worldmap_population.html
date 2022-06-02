@@ -506,14 +506,15 @@
 
                 // update tooltips if there are any
                 d3.selectAll('.tooltip')
-                  .call(function(selection){
+                  .each(function(d, i){
+                        selection = d3.select(this);
                         title = selection.select('h1.tooltipTitle').node();
                         if (title !== null)
                         {
                             var country = title.innerHTML;
                             var bounds = selection.node().getBoundingClientRect();
                             var oldScrollTop = selection.node().scrollTop;
-                            selection.remove();
+                            d3.select(selection.node()).remove();
                             let tooltip = addTooltip(country, bounds.left, bounds.top);
                             tooltip.node().scrollTop = oldScrollTop;
                         }
