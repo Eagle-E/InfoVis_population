@@ -244,7 +244,7 @@ function go_to_world_page(countries="Belgium", year="1970"){
     var el = document.getElementById('sLand');
     v = el.options[0].innerHTML;
   }
-  
+  countries = ['Republic of Moldova', 'Russian Federation', 'Estonia']
   let link = '../Pages/worldmap_population.html?countries=' + countries + '&year=' + year;
   window.location.href = link;
 }

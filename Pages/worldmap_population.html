@@ -46,7 +46,25 @@
 
     </div>
     
-    
+    <script>
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+  
+        let contains = function(list, item) {return list.indexOf(item) > -1;}
+        var getParameters = {}
+        getParameters.year = url.searchParams.get("year");
+        countriesParam = url.searchParams.get("countries")
+        getParameters.countries = countriesParam === '' ? [] : countriesParam.split(',');
+        // console.log(getParameters.countries);
+        // console.log('year: ' + getParameters.year);
+        // console.log('year type: ' + typeof(getParameters.year));
+        
+        y = getParameters.year
+        if (y === '' || y === null || getParameters['year'] === undefined){
+            getParameters.year = 2020;
+        }
+
+    </script>
 
     <script>        
     // Get worldmap svg size
@@ -417,9 +435,30 @@
                 }
             })
 
-
-
             return tooltip;
+        }
+
+        let addTooltipInBounds = function(countryName, x, y)
+        {
+            var wmBounds = d3.select('#worldmap_wrapper').node().getBoundingClientRect();
+                
+            tooltip = addTooltip(countryName, x, y);
+            var ttBounds = tooltip.node().getBoundingClientRect();
+            
+            // adjust height if the tooltip goes out of bounds
+            if (y + ttBounds.height > wmBounds.height + wmBounds.top){
+                y -= Math.abs((y + ttBounds.height) - (wmBounds.height + wmBounds.top))
+            }
+            // check width
+            if (ttBounds.left + ttBounds.width > wmBounds.left + wmBounds.width){
+                x -= ttBounds.width + 80;
+            }
+            else{
+                x += 40
+            }
+            
+            tooltip.style('left', x+'px')
+                    .style('top', y+'px')
         }
 
         let mouseClickCountry = function(data, index)
@@ -436,7 +475,6 @@
                     goBack = false;
                     selections.call(function(selection){
                         if (selection.select('.tooltipTitle').node().innerHTML === countryName){
-                            console.log('>>>>> New tooltip')
                             goBack = true;
                         }
                     })
@@ -454,30 +492,7 @@
                 // add new tooltip
                 var mx = d3.event.pageX;
                 var my = d3.event.pageY;
-                var wmBounds = d3.select('#worldmap_wrapper').node().getBoundingClientRect();
-                
-                
-                tooltip = addTooltip(countryName, mx, my);
-                var ttBounds = tooltip.node().getBoundingClientRect();
-                
-                // adjust height if the tooltip goes out of bounds
-                if (my + ttBounds.height > wmBounds.height + wmBounds.top)
-                {
-                    my -= Math.abs((my + ttBounds.height) - (wmBounds.height + wmBounds.top))
-                }
-                // check width
-                if (ttBounds.left + ttBounds.width > wmBounds.left + wmBounds.width)
-                {
-                    mx -= ttBounds.width + 80;
-                }
-                else{
-                    mx += 40
-                }
-                
-                tooltip.style('left', mx+'px')
-                       .style('top', my+'px')
-                
-
+                addTooltipInBounds(countryName, mx, my);
             }
         }
 
@@ -487,7 +502,7 @@
             min: 1950,
             max: 2020,
             step: 5,
-            from: 2020,
+            from: getParameters.year,
             prefix: "year ",
             grid: true,
             grid_num: 14,
@@ -552,6 +567,7 @@
             .on("mouseover", mouseOverCountry )
             .on("mouseleave", mouseLeaveCountry )
             .on("click", mouseClickCountry)
+            
         
         // zoom and pan
         svg.call(d3.zoom()
@@ -569,6 +585,15 @@
             .attr('id', 'legend');
 
         
+        // add tooltip for each country in the GET parameter
+        svg.selectAll('path')
+           .each(function(data, index){
+                let countryName = data.properties.name;
+                if (contains(getParameters.countries, countryName)){
+                    bounds = this.getBoundingClientRect();
+                    addTooltipInBounds(countryName, bounds.left, bounds.top)
+                }
+           })
     }
 
     
