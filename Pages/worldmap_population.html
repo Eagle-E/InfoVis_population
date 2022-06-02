@@ -454,9 +454,10 @@
                         {
                             var country = title.innerHTML;
                             var bounds = selection.node().getBoundingClientRect();
+                            var oldScrollTop = selection.node().scrollTop;
                             selection.remove();
-                            addTooltip(country, bounds.left, bounds.top);
-
+                            let tooltip = addTooltip(country, bounds.left, bounds.top);
+                            tooltip.node().scrollTop = oldScrollTop;
                         }
                   })
             }
@@ -520,7 +521,7 @@
     }
 
     function go_to_gdp_page(countries, year){
-        let link = './about.html?countries=' + countries + '&year=' + year;
+        let link = './gdp-example.html?countries=' + countries + '&year=' + year;
         window.location.href = link;
     }
 
