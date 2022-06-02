@@ -24,7 +24,7 @@
         <div class="topnav">
             <a class="active" href="./worldmap_population.html">Worldmap</a>
             <a onclick="go_to_pyramid_page()">Population Pyramide</a>
-            <a href="#p3">R-page</a>
+            <a onclick="go_to_gdp_page()">Gdp/life expectancy</a>
             <a href="./about.html">About</a>
         </div>
 
@@ -364,12 +364,17 @@
             let is_empty = function(obj){return Object.keys(obj).length === 0;}
             let contains = function(obj, key){return Object.keys(obj).indexOf(key) > -1;}
             gdp = 'data unavailable';
+            lifeExpectancy = 'data unavailable'; 
 
             if (contains(UN_DATA, '' + year) && contains(UN_DATA[year], country))
             {
                 gdp = UN_DATA[year][country]['GDP_perCapita'];
                 gdp = parseFloat(gdp).toFixed(2);
                 gdp = '$' + gdp;
+
+                lifeExpectancy = UN_DATA[year][country]['lifeExpectancy'];
+                lifeExpectancy = parseFloat(lifeExpectancy).toFixed(2);
+                lifeExpectancy = lifeExpectancy + ' years';
             }
             tooltip.append("p")
                     .html("GDP per capita: " + gdp)
@@ -379,12 +384,18 @@
             // button to gdp page
             tooltip.append("input")
                     .attr("type", "button")
-                    .attr("value", "compare gdp countries")
+                    .attr("value", "compare countries")
                     .on("click", function(){go_to_gdp_page([countryName], year)})
                     .attr("class", "tooltipBtn button")// col2 row2")
                     .style('grid-area', 'gdpBtn')
 
             
+            // life expectancy
+            tooltip.append("p")
+                    .html("Life expectancy: " + lifeExpectancy)
+                    .attr("class", "tooltipText")// col1");
+                    .style('grid-area', 'ageExp')
+
             return tooltip;
         }
 
