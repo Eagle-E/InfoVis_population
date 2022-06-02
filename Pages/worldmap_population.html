@@ -266,9 +266,6 @@
 
         let addTooltip = function(country, x, y)
         {
-            // remove previous tooltips
-            d3.selectAll(".tooltip").remove();
-
             // create the new tooltip
             let countryName = country;
             let year = d3.select("#slider_year").attr("value");
@@ -355,16 +352,6 @@
                     .attr("class", "tooltipText")// col1");
                     .style('grid-area', 'avgAge')
 
-
-            // simple population line chart
-            let lineChartHeight = 200;
-            let lineChartWidth = tooltip.node().getBoundingClientRect().width;
-            let lineChart = create_simple_population_linechart(countryName, year, lineChartHeight, lineChartWidth);
-            tooltip.append(() => lineChart.node())
-                    // .style('grid-column', 'span 2')
-                    .style('grid-area', 'line')
-
-
             // GDP per capita
             let is_empty = function(obj){return Object.keys(obj).length === 0;}
             let contains = function(obj, key){return Object.keys(obj).indexOf(key) > -1;}
@@ -401,6 +388,15 @@
                     .attr("class", "tooltipText")// col1");
                     .style('grid-area', 'ageExp')
 
+
+            // simple population line chart
+            let lineChartHeight = 200;
+            let lineChartWidth = tooltip.node().getBoundingClientRect().width;
+            let lineChart = create_simple_population_linechart(countryName, year, lineChartHeight, lineChartWidth);
+            tooltip.append(() => lineChart.node())
+                    // .style('grid-column', 'span 2')
+                    .style('grid-area', 'line')
+
             // tooltip drag events
             tooltip.on('mousedown', function(e){
                 dragEvent.mousePos.x = d3.event.clientX;
@@ -429,15 +425,39 @@
         let mouseClickCountry = function(data, index)
         {
             countryClicked = true;
-            
+            countryName = data.properties.name;
+
             // TOOLTIP
             {
+                // check if tooltip already exists
+                selections = d3.selectAll('.tooltip');
+                if (!selections.empty())
+                {
+                    goBack = false;
+                    selections.call(function(selection){
+                        if (selection.select('.tooltipTitle').node().innerHTML === countryName){
+                            console.log('>>>>> New tooltip')
+                            goBack = true;
+                        }
+                    })
+                    if (goBack){
+                        return;
+                    }
+                }
+
+                // remove previous tooltips if ctrl key is not pressed
+                if (!d3.event.ctrlKey){
+                    d3.selectAll(".tooltip").remove();
+                }
+                
+
+                // add new tooltip
                 var mx = d3.event.pageX;
                 var my = d3.event.pageY;
                 var wmBounds = d3.select('#worldmap_wrapper').node().getBoundingClientRect();
                 
                 
-                tooltip = addTooltip(data.properties.name, mx, my);
+                tooltip = addTooltip(countryName, mx, my);
                 var ttBounds = tooltip.node().getBoundingClientRect();
                 
                 // adjust height if the tooltip goes out of bounds
