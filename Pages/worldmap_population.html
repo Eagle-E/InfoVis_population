@@ -316,6 +316,11 @@
                     .attr("class", "tooltipText")// col1");
                     .style('grid-area', 'etc3')
 
+            tooltip.append("h2")
+                    .html("Other statistics")
+                    .attr("class", "tooltipSubTitle")// col1");
+                    .style('grid-area', 'other')
+
             // average age
             total = 0
             count = 0
@@ -355,7 +360,7 @@
                     .style('grid-area', 'line')
 
 
-            // TODO: GDP PPP
+            // GDP PPP
 
 
             return tooltip;
