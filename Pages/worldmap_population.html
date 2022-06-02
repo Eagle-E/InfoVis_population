@@ -105,7 +105,8 @@
 
     function ready(error, topo) 
     {
-        let mouseOverCountry = function(data, index) {
+        let mouseOverCountry = function(data, index) 
+        {
             // FOCUS
             {
                 d3.selectAll(".Country")
@@ -135,10 +136,10 @@
 
                 title.attr("x", ww/2 - tw/2);
             }
-
         }
-    
-        let mouseLeaveCountry = function(data, index) {
+
+        let mouseLeaveCountry = function(data, index) 
+        {
             // UNFOCUS
             {
                 d3.selectAll(".Country")
@@ -154,20 +155,106 @@
                 .style("stroke", "#979797")
             }
 
-            // TOOLTIP
-            {
-                
-                
-            }
-
             // TITLE
             {
                 d3.select("#worldmap_title_txt").html("");
             }
-
         }
 
-        let mouseClickCountry = function(data, index){
+        let mouseClickOcean = function(data, index)
+        {
+            if (countryClicked)
+            {
+                countryClicked = false;
+                return;
+            }
+            
+            // remove previous tooltips
+            d3.selectAll(".tooltip").remove();
+        }
+
+        let create_simple_population_linechart = function(country, year, height, width)
+        {
+            let svgLine = d3.create("svg");
+
+            svgLine.style("width", "100%")
+                    // .style("border", "1px solid black")
+                    .attr("width", width + "px")
+                    .attr("height", height + "px")
+                    .attr('class', 'linechart')
+            let countryData = populationData[country];
+            if (countryData == undefined)
+                return  svgLine;
+            
+
+            let margin = {top: 10, right: 30, bottom: 20, left: 60  };
+            let chartWidth = width - margin.left - margin.right;
+            let chartHeight = height - margin.top - margin.bottom;
+
+            let svgDrawArea = svgLine.append("g")
+                                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            // x axis
+            d3.axisBottom()
+            let years = Object.keys(countryData);
+            let x = d3.scaleLinear()
+                        .domain(d3.extent(years))
+                        .range([ 0, chartWidth ]);
+            svgDrawArea.append("g")
+                    .attr("transform", "translate(0" + "," + chartHeight + ")")
+                    .call(
+                        d3.axisBottom(x)
+                            .tickValues([1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020])
+                            .tickFormat(function(d){return d})
+                    )
+                    .style('font-size', '0.8rem')
+                    .attr('class', 'axis x-axis')
+
+            // y axis
+            let minMen = d3.min(Object.values(countryData), function(d){return d.totalMen;});
+            let maxMen = d3.max(Object.values(countryData), function(d){return d.totalMen;});
+            let minWomen = d3.min(Object.values(countryData), function(d){return d.totalWomen;});
+            let maxWomen = d3.max(Object.values(countryData), function(d){return d.totalWomen;});
+
+            var y = d3.scaleLinear()
+                        .domain([d3.min([minMen, minWomen]), d3.max([maxMen, maxWomen])])
+                        .range([ chartHeight, 0 ]);
+            svgDrawArea.append("g")
+                       .call(d3.axisLeft(y).ticks(5))   
+                       .style('font-size', '0.8rem')
+                       .attr('class', 'axis y-axis')
+                       
+
+            // the line, first get all coordinates for male and female population lines
+            // then add the coordinates to the svg as a new group
+            coordsM = []
+            coordsF = []
+            for (year in countryData)
+            {
+                coordsM.push([x(year), y(countryData[year]['totalMen'])]);
+                coordsF.push([x(year), y(countryData[year]['totalWomen'])]);
+            }
+
+            let lineGroup = svgDrawArea.append('g').attr('class', 'linechart lines-group');
+            lineGroup.append("path")
+                     .attr('class', 'line male')
+                     .style("fill", "none")
+                     .style('stroke', 'rgb(0,0,255)')
+                     .style("stroke-width", 2)
+                     .attr('d', d3.line()(coordsM));
+            lineGroup.append("path")
+                     .attr('class', 'line female')
+                     .style("fill", "none")
+                     .style("stroke-width", 2)
+                     .style('stroke', 'rgb(246, 51, 213)')
+                     .attr('d', d3.line()(coordsF));
+            
+
+            return svgLine;
+        }
+
+        let mouseClickCountry = function(data, index)
+        {
             countryClicked = true;
             
             // TOOLTIP
@@ -187,6 +274,7 @@
                                 .style("display", "grid")
                                 .style("grid-template-columns", "1fr max-content");
 
+                // title and button
                 tooltip.style("left", d3.event.pageX + 70 + "px")
                         .style("top", d3.event.pageY  + "px")
                         .append("h1")
@@ -200,10 +288,19 @@
                         .on("click", function(){go_to_pyramid_page([countryName], year)})
                         .attr("class", "tooltipBtn button col2 row2");
 
+                // subtitle
                 tooltip.append("h2")
-                        .html("Population (" + year + ")")
+                        .html("Population in thousands (" + year + ")")
                         .attr("class", "tooltipSubTitle col1");
-
+                        
+                // simple population line chart
+                let lineChartHeight = 200;
+                let lineChartWidth = tooltip.node().getBoundingClientRect().width;
+                let lineChart = create_simple_population_linechart(countryName, 2020, lineChartHeight, lineChartWidth);
+                tooltip.append(() => lineChart.node())
+                        .style('grid-column', 'span 2');
+                        
+                // male female and total population of current year
                 tooltip.append("p")
                         .html("Male: " + prettify(populationData[countryName][year]["totalMen"]*1000))
                         .attr("class", "tooltipText col1");
@@ -213,21 +310,14 @@
                 tooltip.append("p")
                         .html("Total: " + prettify(populationData[countryName][year]["total"]*1000))
                         .attr("class", "tooltipText col1");
-            }
 
-            
-        }
-    
-        let mouseClickOcean = function(data, index){
-            if (countryClicked)
-            {
-                countryClicked = false;
-                return;
+                // TODO: Average age
+                // TODO: GDP PPP 
+                // TODO: change with slider
+
             }
-            
-            // remove previous tooltips
-            d3.selectAll(".tooltip").remove();
         }
+
 
         // init the slider
         ionRangeSlider('#slider_year', {
@@ -302,7 +392,7 @@
         
     }
 
-
+    
 
 
     function go_to_pyramid_page(countries, year){
