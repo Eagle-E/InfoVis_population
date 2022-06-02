@@ -298,15 +298,6 @@
                     .attr("class", "tooltipSubTitle")// col1");
                     .style('grid-area', 'subtitle')
                     
-                    
-            // simple population line chart
-            let lineChartHeight = 200;
-            let lineChartWidth = tooltip.node().getBoundingClientRect().width;
-            let lineChart = create_simple_population_linechart(countryName, year, lineChartHeight, lineChartWidth);
-            tooltip.append(() => lineChart.node())
-                    // .style('grid-column', 'span 2')
-                    .style('grid-area', 'line')
-                    
             // male female and total population of current year
             tooltip.append("p")
                     .html("Male: " + prettify(populationData[countryName][year]["totalMen"]*1000))
@@ -324,7 +315,6 @@
                     .html("Total: " + prettify(populationData[countryName][year]["total"]*1000))
                     .attr("class", "tooltipText")// col1");
                     .style('grid-area', 'etc3')
-
 
             // average age
             total = 0
@@ -355,14 +345,20 @@
                     .attr("class", "tooltipText")// col1");
                     .style('grid-area', 'avgAge')
 
-            // button to pyramid page
-            // tooltip.append("input")
-            //         .attr("type", "button")
-            //         .attr("value", "compare age groups")
-            //         .on("click", function(){go_to_pyramid_page([countryName], year)})
-            //         .attr("class", "tooltipBtn button col2 row2");
+
+            // simple population line chart
+            let lineChartHeight = 200;
+            let lineChartWidth = tooltip.node().getBoundingClientRect().width;
+            let lineChart = create_simple_population_linechart(countryName, year, lineChartHeight, lineChartWidth);
+            tooltip.append(() => lineChart.node())
+                    // .style('grid-column', 'span 2')
+                    .style('grid-area', 'line')
+
 
             // TODO: GDP PPP
+
+
+            return tooltip;
         }
 
         let mouseClickCountry = function(data, index)
@@ -371,7 +367,31 @@
             
             // TOOLTIP
             {
-                addTooltip(data.properties.name, d3.event.pageX + 70, d3.event.pageY);
+                var mx = d3.event.pageX;
+                var my = d3.event.pageY;
+                var wmBounds = d3.select('#worldmap_wrapper').node().getBoundingClientRect();
+                
+                
+                tooltip = addTooltip(data.properties.name, mx, my);
+                var ttBounds = tooltip.node().getBoundingClientRect();
+                
+                // adjust height if the tooltip goes out of bounds
+                if (my + ttBounds.height > wmBounds.height + wmBounds.top)
+                {
+                    my -= Math.abs((my + ttBounds.height) - (wmBounds.height + wmBounds.top))
+                }
+                // check width
+                if (ttBounds.left + ttBounds.width > wmBounds.left + wmBounds.width)
+                {
+                    mx -= ttBounds.width + 80;
+                }
+                else{
+                    mx += 40
+                }
+                
+                tooltip.style('left', mx+'px')
+                       .style('top', my+'px')
+                
 
             }
         }

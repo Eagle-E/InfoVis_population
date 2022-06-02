@@ -98,7 +98,7 @@ path {
     grid-column-gap: 32px;
     grid-template-columns: 1fr max-content;
     grid-template-areas:    "title    title"
-                            "subtitle ."
+                            "subtitle subtitle"
                             "line     line"
                             "etc1     ."
                             "etc2     ."
@@ -112,7 +112,9 @@ path {
     padding: 14px;
     border-radius: 10px;
     box-shadow: 2px 2px #888888;
-    
+    max-width: 400px;
+    max-height: 350px;
+    overflow-y: scroll;
   }
 
 .tooltipTitle{
