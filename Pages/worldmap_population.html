@@ -93,18 +93,18 @@
 
     // get the population data
     let populationData = null;
+    let UN_DATA = null;
 
-    fetch("http://localhost:8000/data/population.json")
-    .then(response => response.json())
-    .then(json => {
-        populationData = json;
-        d3.queue()
+    d3.queue()
             .defer(d3.json, "http://localhost:8000/data/world.geojson")
+            .defer(d3.json, "http://localhost:8000/data/population.json")
+            .defer(d3.json, "http://localhost:8000/data/UN_JSON.json")
             .await(ready);
-    })
 
-    function ready(error, topo) 
+    function ready(error, topo, population, un_data) 
     {
+        populationData = population;
+        UN_DATA = un_data;
         let mouseOverCountry = function(data, index) 
         {
             // FOCUS
@@ -360,8 +360,21 @@
                     .style('grid-area', 'line')
 
 
-            // GDP PPP
+            // GDP per capita
+            let is_empty = function(obj){return Object.keys(obj).length === 0;}
+            let contains = function(obj, key){return Object.keys(obj).indexOf(key) > -1;}
+            gdp = 'data unavailable';
 
+            if (contains(UN_DATA, '' + year) && contains(UN_DATA[year], country))
+            {
+                gdp = UN_DATA[year][country]['GDP_perCapita'];
+                gdp = parseFloat(gdp).toFixed(2);
+                gdp = '$' + gdp;
+            }
+            tooltip.append("p")
+                    .html("GDP per capita: " + gdp)
+                    .attr("class", "tooltipText")// col1");
+                    .style('grid-area', 'gdp')
 
             return tooltip;
         }
@@ -427,10 +440,15 @@
                 // update tooltips if there are any
                 d3.selectAll('.tooltip')
                   .call(function(selection){
-                        var country = selection.select('h1.tooltipTitle').node().innerHTML;
-                        var bounds = selection.node().getBoundingClientRect();
-                        selection.remove();
-                        addTooltip(country, bounds.left, bounds.top);
+                        title = selection.select('h1.tooltipTitle').node();
+                        if (title !== null)
+                        {
+                            var country = title.innerHTML;
+                            var bounds = selection.node().getBoundingClientRect();
+                            selection.remove();
+                            addTooltip(country, bounds.left, bounds.top);
+
+                        }
                   })
             }
         });            

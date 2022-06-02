@@ -104,7 +104,10 @@ path {
                             "etc2     ."
                             "etc3     ."
                             "other    other"
-                            "avgAge   pyrBtn";
+                            "avgAge   pyrBtn"
+                            "gdp      gdpBtn"
+                            "ageExp   ."
+                            ;
 
     align-items: center;
     min-width: 80px;
@@ -113,7 +116,7 @@ path {
     padding: 14px;
     border-radius: 10px;
     box-shadow: 2px 2px #888888;
-    max-width: 400px;
+    max-width: 460px;
     max-height: 350px;
     overflow-y: scroll;
   }
