@@ -376,6 +376,15 @@
                     .attr("class", "tooltipText")// col1");
                     .style('grid-area', 'gdp')
 
+            // button to gdp page
+            tooltip.append("input")
+                    .attr("type", "button")
+                    .attr("value", "compare gdp countries")
+                    .on("click", function(){go_to_gdp_page([countryName], year)})
+                    .attr("class", "tooltipBtn button")// col2 row2")
+                    .style('grid-area', 'gdpBtn')
+
+            
             return tooltip;
         }
 
@@ -507,6 +516,11 @@
 
     function go_to_pyramid_page(countries, year){
         let link = './pyramid.html?countries=' + countries + '&year=' + year;
+        window.location.href = link;
+    }
+
+    function go_to_gdp_page(countries, year){
+        let link = './about.html?countries=' + countries + '&year=' + year;
         window.location.href = link;
     }
 

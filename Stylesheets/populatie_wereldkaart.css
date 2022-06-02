@@ -146,6 +146,8 @@ path {
     display: flex;
     justify-self: center;
     align-self: center;
+    width: 100%;
+    justify-content: center;
 }
 
 .col1{
