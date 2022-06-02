@@ -275,48 +275,94 @@
                             .style("display", "grid")
                             .style("grid-template-columns", "1fr max-content");
 
-            // title and button
+            // title
             tooltip.style("left", x + "px")
                     .style("top", y + "px")
                     .append("h1")
                     .html(countryName)
                     .attr("class", "tooltipTitle")
-                    .style("grid-column", "span 2");
+                    // .style("grid-column", "span 2")
+                    .style('grid-area', 'title')
 
             tooltip.append("input")
                     .attr("type", "button")
                     .attr("value", "compare age groups")
                     .on("click", function(){go_to_pyramid_page([countryName], year)})
-                    .attr("class", "tooltipBtn button col2 row2");
+                    .attr("class", "tooltipBtn button")// col2 row2")
+                    .style('grid-area', 'pyrBtn')
+
 
             // subtitle
             tooltip.append("h2")
                     .html("Population in thousands")
-                    .attr("class", "tooltipSubTitle col1");
+                    .attr("class", "tooltipSubTitle")// col1");
+                    .style('grid-area', 'subtitle')
+                    
                     
             // simple population line chart
             let lineChartHeight = 200;
             let lineChartWidth = tooltip.node().getBoundingClientRect().width;
             let lineChart = create_simple_population_linechart(countryName, year, lineChartHeight, lineChartWidth);
             tooltip.append(() => lineChart.node())
-                    .style('grid-column', 'span 2');
+                    // .style('grid-column', 'span 2')
+                    .style('grid-area', 'line')
                     
             // male female and total population of current year
             tooltip.append("p")
                     .html("Male: " + prettify(populationData[countryName][year]["totalMen"]*1000))
-                    .attr("class", "tooltipText col1")
-                    .style('color', 'blue');
+                    .attr("class", "tooltipText")// col1")
+                    .style('color', 'blue')
+                    .style('grid-area', 'etc1')
+
             tooltip.append("p")
                     .html("Female: " + prettify(populationData[countryName][year]["totalWomen"]*1000))
-                    .attr("class", "tooltipText col1")
-                    .style('color', 'rgb(246, 51, 213)');
+                    .attr("class", "tooltipText")// col1")
+                    .style('color', 'rgb(246, 51, 213)')
+                    .style('grid-area', 'etc2')
+
             tooltip.append("p")
                     .html("Total: " + prettify(populationData[countryName][year]["total"]*1000))
-                    .attr("class", "tooltipText col1");
+                    .attr("class", "tooltipText")// col1");
+                    .style('grid-area', 'etc3')
 
-            // TODO: Average age
-            // TODO: GDP PPP 
-            // TODO: change with slider
+
+            // average age
+            total = 0
+            count = 0
+            popAgeGroups = populationData[country][year];
+            for (let ageGroup in popAgeGroups)
+            {
+                if (ageGroup === '100+')
+                {
+                    n = popAgeGroups[ageGroup]['total'];
+                    total += 100 * n;
+                    count += n;
+                }
+                l = ageGroup.split('-')
+                if (l.length === 2)
+                {
+                    n = popAgeGroups[ageGroup]['total'];
+                    x1 = parseInt(l[0]);
+                    x2 = parseInt(l[1]);
+                    a = (x1+x2)/2;
+                    total += a * n;
+                    count += n;
+                }
+            }
+            avg = total / count;
+            tooltip.append("p")
+                    .html("Average age: " + avg.toFixed(2))
+                    .attr("class", "tooltipText")// col1");
+                    .style('grid-area', 'avgAge')
+
+            // button to pyramid page
+            // tooltip.append("input")
+            //         .attr("type", "button")
+            //         .attr("value", "compare age groups")
+            //         .on("click", function(){go_to_pyramid_page([countryName], year)})
+            //         .attr("class", "tooltipBtn button col2 row2");
+
+            // TODO: GDP PPP
         }
 
         let mouseClickCountry = function(data, index)
