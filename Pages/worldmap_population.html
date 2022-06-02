@@ -192,7 +192,8 @@
             let chartHeight = height - margin.top - margin.bottom;
 
             let svgDrawArea = svgLine.append("g")
-                                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                                     .attr('id', 'svgDrawArea');
 
             // x axis
             d3.axisBottom()
@@ -229,10 +230,11 @@
             // then add the coordinates to the svg as a new group
             coordsM = []
             coordsF = []
-            for (year in countryData)
+            // var keyYear = 0
+            for (var keyYear in countryData)
             {
-                coordsM.push([x(year), y(countryData[year]['totalMen'])]);
-                coordsF.push([x(year), y(countryData[year]['totalWomen'])]);
+                coordsM.push([x(keyYear), y(countryData[keyYear]['totalMen'])]);
+                coordsF.push([x(keyYear), y(countryData[keyYear]['totalWomen'])]);
             }
 
             let lineGroup = svgDrawArea.append('g').attr('class', 'linechart lines-group');
@@ -249,7 +251,11 @@
                      .style('stroke', 'rgb(246, 51, 213)')
                      .attr('d', d3.line()(coordsF));
             
-
+            // vertical line indicating the current year
+            svgDrawArea.append("path")
+                       .attr("d", d3.line()([  [x(year), y(d3.max([maxMen, maxWomen]))], [x(year), y(d3.min([minMen, minWomen]))]  ]))
+                       .style("fill", "none")
+                       .style("stroke-width", 1.5)
             return svgLine;
         }
 
@@ -290,23 +296,25 @@
 
                 // subtitle
                 tooltip.append("h2")
-                        .html("Population in thousands (" + year + ")")
+                        .html("Population in thousands")
                         .attr("class", "tooltipSubTitle col1");
                         
                 // simple population line chart
                 let lineChartHeight = 200;
                 let lineChartWidth = tooltip.node().getBoundingClientRect().width;
-                let lineChart = create_simple_population_linechart(countryName, 2020, lineChartHeight, lineChartWidth);
+                let lineChart = create_simple_population_linechart(countryName, year, lineChartHeight, lineChartWidth);
                 tooltip.append(() => lineChart.node())
                         .style('grid-column', 'span 2');
                         
                 // male female and total population of current year
                 tooltip.append("p")
                         .html("Male: " + prettify(populationData[countryName][year]["totalMen"]*1000))
-                        .attr("class", "tooltipText col1");
+                        .attr("class", "tooltipText col1")
+                        .style('color', 'blue');
                 tooltip.append("p")
                         .html("Female: " + prettify(populationData[countryName][year]["totalWomen"]*1000))
-                        .attr("class", "tooltipText col1");
+                        .attr("class", "tooltipText col1")
+                        .style('color', 'rgb(246, 51, 213)');
                 tooltip.append("p")
                         .html("Total: " + prettify(populationData[countryName][year]["total"]*1000))
                         .attr("class", "tooltipText col1");
