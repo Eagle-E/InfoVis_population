@@ -274,7 +274,7 @@ function getCountriesArray(){
   "Portugal","Serbia","Slovenia","Spain","Austria",
   "Belgium","France","Germany","Luxembourg","Netherlands","Switzerland",,
   "Canada","United States of America",
-  ,"Burundi","Comoros","Djibouti",
+  "Burundi","Comoros","Djibouti",
   "Eritrea","Ethiopia","Kenya","Madagascar","Malawi","Mauritius","Mayotte",
   "Mozambique","Réunion","Rwanda","Seychelles","Somalia","South Sudan",
   "Uganda","United Republic of Tanzania","Zambia","Zimbabwe","Angola","Cameroon",
