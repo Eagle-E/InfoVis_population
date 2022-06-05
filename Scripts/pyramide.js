@@ -226,28 +226,38 @@ function changeData(){
 }
 
 /*
-    Sending data functions. 
+    Sending data functions to spicific sites.
+
 */
 function sendDataToAbout(){
-    var id = "Multidata"
-    const options = "DIT, IS, EEN, ARRAY"
-
     var href="../Pages/about.html"
-    window.location.href = href+"?filename="+id+"&"+"lands="+options;
+    window.location.href = href;
 }
 
 function go_to_world_page(countries="Belgium", year="1970"){
   year = d3.select("#slider_year").attr("value");
   countries = $('#sLand').find(":selected").text();
-  
-  //console.log(countries)
+
   if(countries == "" || countries == null){
     var el = document.getElementById('sLand');
     v = el.options[0].innerHTML;
   }
-  //countries = ['Republic of Moldova', 'Russian Federation', 'Estonia']
+
   let link = '../Pages/worldmap_population.html?countries=' + countries + '&year=' + year;
   window.location.href = link;
+}
+
+function go_to_gdp_page(countries="Belgium", year="1970"){
+  year = d3.select("#slider_year").attr("value");
+  countries = $('#sLand').find(":selected").text();
+  
+  if(countries == "" || countries == null){
+    var el = document.getElementById('sLand');
+    v = el.options[0].innerHTML;
+  }
+
+  var href="../Pages/gdp-example.html"
+  window.location.href = href+"?countries="+countries+"&"+"year="+year;
 }
 
 
@@ -317,80 +327,3 @@ function getCountriesArray(){
 
   return countries;
 }
-
-
-
-
-//SNIPPET SECTION
-//SNIPPET SECTION
-//SNIPPET SECTION
-//SNIPPET SECTION
-//SNIPPET SECTION
-//SNIPPET SECTION
-
-
-/*
-  var options = 
-  ["WORLD","UN development groups", "More developed regions",
-  "Less developed regions", "Least developed countries",
-  "Less developed regions, excluding least developed countries",
-  "Less developed regions, excluding China",
-  "Land-locked Developing Countries (LLDC)",
-  "Small Island Developing States (SIDS)", "World Bank income groups",
-  "High-income countries",,"Middle-income countries",
-  "Upper-middle-income countries", "Lower-middle-income countries",
-  "Low-income countries","No income group available","Geographic regions",
-  "Africa","Asia","Europe","Latin America and the Caribbean",
-  "Northern America","Oceania","Sustainable Development Goal (SDG) regions",
-  "SUB-SAHARAN AFRICA","Eastern Africa","Burundi","Comoros","Djibouti",
-  "Eritrea","Ethiopia","Kenya","Madagascar","Malawi","Mauritius","Mayotte",
-  "Mozambique","Réunion","Rwanda","Seychelles","Somalia","South Sudan",
-  "Uganda","United Republic of Tanzania","Zambia","Zimbabwe",
-  "Middle Africa","Angola","Cameroon","Central African Republic","Chad",
-  "Congo","Democratic Republic of the Congo","Equatorial Guinea","Gabon",
-  "Sao Tome and Principe","Southern Africa","Botswana","Eswatini","Lesotho",
-  "Namibia","South Africa","Western Africa","Benin","Burkina Faso",
-  "Cabo Verde","Côte d'Ivoire","Gambia","Ghana","Guinea","Guinea-Bissau",
-  "Liberia","Mali","Mauritania","Niger","Nigeria","Senegal","Sierra Leone",
-  "Togo","NORTHERN AFRICA AND WESTERN ASIA","Northern Africa","Algeria",
-  "Egypt","Libya","Morocco","Sudan","Tunisia","Western Sahara",
-  "Western Asia","Armenia","Azerbaijan","Bahrain","Cyprus","Georgia","Iraq",
-  "Israel","Jordan","Kuwait","Lebanon","Oman","Qatar","Saudi Arabia",
-  "State of Palestine","Syrian Arab Republic","Turkey",
-  "United Arab Emirates","Yemen","CENTRAL AND SOUTHERN ASIA","Central Asia",
-  "Kazakhstan","Kyrgyzstan","Tajikistan","Turkmenistan","Uzbekistan",
-  "Southern Asia","Afghanistan","Bangladesh","Bhutan","India",
-  "Iran (Islamic Republic of)","Maldives","Nepal","Pakistan","Sri Lanka",
-  "EASTERN AND SOUTH-EASTERN ASIA","Eastern Asia","China",
-  "China, Hong Kong SAR","China, Macao SAR",
-  "China, Taiwan Province of China","Dem. People's Republic of Korea",
-  "Japan","Mongolia","Republic of Korea","South-Eastern Asia",
-  "Brunei Darussalam","Cambodia","Indonesia",
-  "Lao People's Democratic Republic","Malaysia","Myanmar","Philippines",
-  "Singapore","Thailand","Timor-Leste","Viet Nam",
-  "LATIN AMERICA AND THE CARIBBEAN","Caribbean","Antigua and Barbuda",
-  "Aruba","Bahamas","Barbados","Cuba","Curaçao","Dominican Republic",
-  "Grenada","Guadeloupe","Haiti","Jamaica","Martinique","Puerto Rico",
-  "Saint Lucia","Saint Vincent and the Grenadines","Trinidad and Tobago",
-  "United States Virgin Islands","Central America","Belize","Costa Rica",
-  "El Salvador","Guatemala","Honduras","Mexico","Nicaragua","Panama",
-  "South America","Argentina","Bolivia (Plurinational State of)","Brazil",
-  "Chile","Colombia","Ecuador","French Guiana","Guyana","Paraguay","Peru",
-  "Suriname","Uruguay","Venezuela (Bolivarian Republic of)",
-  "AUSTRALIA/NEW ZEALAND","Australia","New Zealand",
-  "OCEANIA (EXCLUDING AUSTRALIA AND NEW ZEALAND)","Melanesia","Fiji",
-  "New Caledonia","Papua New Guinea","Solomon Islands","Vanuatu",
-  "Micronesia","Guam","Kiribati","Micronesia (Fed. States of)","Polynesia",
-  "French Polynesia","Samoa","Tonga","EUROPE AND NORTHERN AMERICA","EUROPE",
-  "Eastern Europe","Belarus","Bulgaria","Czechia","Hungary","Poland",
-  "Republic of Moldova","Romania","Russian Federation","Slovakia","Ukraine",
-  "Northern Europe","Channel Islands","Denmark","Estonia","Finland",
-  "Iceland","Ireland","Latvia","Lithuania","Norway","Sweden",
-  "United Kingdom","Southern Europe","Albania","Bosnia and Herzegovina",
-  "Croatia","Greece","Italy","Malta","Montenegro","North Macedonia",
-  "Portugal","Serbia","Slovenia","Spain","Western Europe","Austria",
-  "Belgium","France","Germany","Luxembourg","Netherlands","Switzerland",
-  "NORTHERN AMERICA","Canada","United States of America"];
-
-
-*/
