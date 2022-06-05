@@ -25,52 +25,7 @@
   </div>
 
   <div class="content_div">
-    <div id="div_slider">
-      <input type="text" id="slider_year" name="year" value="" />
-  
-      <script lang="javascript">
-          var y = 2020;
-  
-          var url_string = window.location.href;
-          var url = new URL(url_string);
-  
-          var year = url.searchParams.get("year");
-  
-          var empty = false
-          if(year == null || !(1950 <= year <= 2020) ){
-            empty = true;
-            console.log(year)
-          }
-
-          if(year == "undefined"){
-            empty = true;
-          }
-          
-          if(empty){
-            y = 2020;
-          }else{
-            y = parseInt(year);
-          } 
-  
-  
-          ionRangeSlider('#slider_year', {
-            min: 1950,
-            max: 2020,
-            step: 5,
-            from: y,
-            prefix: "year ",
-            grid: true,
-            grid_num: 14,
-            prettify_enabled: false,
-          });
-  
-          var slide = document.getElementById('slider_year');
-          slide.onchange = function() {
-              changeData();
-          }
-      </script>
-    </div>
-    
+   
     <h1 id="land_title"> TEST </h1>
   
     <div class="flex-container">
@@ -130,7 +85,52 @@
   
           </div> 
     </div>
+    
+    <div id="div_slider">
+      <input type="text" id="slider_year" name="year" value="" />
+  
+      <script lang="javascript">
+          var y = 2020;
+  
+          var url_string = window.location.href;
+          var url = new URL(url_string);
+  
+          var year = url.searchParams.get("year");
+  
+          var empty = false
+          if(year == null || !(1950 <= year <= 2020) ){
+            empty = true;
+            console.log(year)
+          }
 
+          if(year == "undefined"){
+            empty = true;
+          }
+          
+          if(empty){
+            y = 2020;
+          }else{
+            y = parseInt(year);
+          } 
+  
+  
+          ionRangeSlider('#slider_year', {
+            min: 1950,
+            max: 2020,
+            step: 5,
+            from: y,
+            prefix: "year ",
+            grid: true,
+            grid_num: 14,
+            prettify_enabled: false,
+          });
+  
+          var slide = document.getElementById('slider_year');
+          slide.onchange = function() {
+              changeData();
+          }
+      </script>
+    </div>
   </div>
 </body>
 </html>
