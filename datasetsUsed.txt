@@ -1,0 +1,4 @@
+#GDP data https://data.un.org/Data.aspx?d=SNAAMA&f=grID%3A101%3BcurrID%3AUSD%3BpcFlag%3A1
+#Life expectancy data https://data.un.org/Data.aspx?q=Life+expectancy&d=PopDiv&f=variableID%3a68
+#GDP total https://data.un.org/Data.aspx?q=GDP&d=WDI&f=Indicator_Code%3aNY.GDP.MKTP.PP.CD
+#Regional data https://unstats.un.org/unsd/methodology/m49/overview/
