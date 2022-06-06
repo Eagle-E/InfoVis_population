@@ -87,7 +87,7 @@ def convert_methodology(data, csv_filename):
                 if(not(year.isdigit())):
                     continue
 
-                contintent_key = 'Continent'
+                contintent_key = 'Region'
                 continent_value = rows['Region Name']
                 country_key = 'Country'
                 country_value = rows['Country or Area']
@@ -161,6 +161,8 @@ def main():
     data = data_to_array()
     data = clean_data(data)
     convert_to_json(data, jsonFilePath)
+
+
 
 
 if __name__ == "__main__":
